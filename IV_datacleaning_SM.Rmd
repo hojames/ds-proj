@@ -1,0 +1,164 @@
+---
+title: "Untitled"
+author: "SM"
+date: "November 24, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+opts_knit$set(root.dir = "C:/Users/Sohini Mukherjee/OneDrive/Documents/Harvard University/Academic/Fall 2017/BST 260 - Data Science I/Final Project/RWJF")
+```
+
+```{r}
+library(tidyverse)
+getwd()
+```
+Uploading data
+```{r}
+IV_2010_1 <- read.csv(file="IV_2010_1_csv.csv")
+IV_2011_1 <- read.csv(file="IV_2011_1_csv.csv")
+IV_2012_1 <- read.csv(file="IV_2012_1_csv.csv")
+IV_2013_1 <- read.csv(file="IV_2013_1_csv.csv")
+IV_2014_1 <- read.csv(file="IV_2014_1_csv.csv")
+IV_2015_1 <- read.csv(file="IV_2015_1_csv.csv")
+IV_2016_1 <- read.csv(file="IV_2016_1_csv.csv")
+```
+Delete columns
+```{r}
+IV_2010_1 <- IV_2010_1[, -c(38:39, 41:71)]
+IV_2012_1 <- IV_2012_1[, -c(40:73)]
+IV_2013_1 <- IV_2013_1[, -c(31:61)]
+IV_2013_1 <- filter(IV_2013_1, County != "") #delete empty county rows for 2013
+IV_2014_1 <- IV_2014_1[, -c(39:81)]
+IV_2016_1 <- IV_2016_1[, -c(39:83)]
+```
+
+Add year
+```{r}
+IV_2010_1$year <- NA
+IV_2010_1 <- IV_2010_1[,c(1:3,41,4:40)]
+IV_2010_1$year <- 2010
+
+IV_2011_1$year <- NA
+IV_2011_1 <- IV_2011_1[,c(1:3,39,4:38)]
+IV_2011_1$year <- 2011
+
+IV_2012_1$year <- NA
+IV_2012_1 <- IV_2012_1[,c(1:3,40,4:39)]
+IV_2012_1$year <- 2012
+
+IV_2013_1$year <- NA
+IV_2013_1 <- IV_2013_1[,c(1:3,31,4:30)]
+IV_2013_1$year <- 2013
+
+IV_2014_1$year <- NA
+IV_2014_1 <- IV_2014_1[,c(1:3,39,4:38)]
+IV_2014_1$year <- 2014
+
+IV_2015_1$year <- NA
+IV_2015_1 <- IV_2015_1[,c(1:3,39,4:38)]
+IV_2015_1$year <- 2015
+
+IV_2016_1$year <- NA
+IV_2016_1 <- IV_2016_1[,c(1:3,39,4:38)]
+IV_2016_1$year <- 2016
+```
+
+Initial binding rows
+```{r}
+IV <- bind_rows(IV_2010_1,IV_2011_1,IV_2012_1,IV_2013_1,IV_2014_1,IV_2015_1,IV_2016_1)
+```
+Check naming inconsistencies
+```{r}
+str(IV)
+```
+Rename 2011 "PCP.Rate"" to "PCP_rate"
+```{r}
+str(IV_2011_1$PCP.Rate)
+names(IV_2011_1)[names(IV_2011_1) == 'PCP.Rate'] <- 'PCP_rate'
+```
+Rename 2014 "Physically.Inactive" to "inactive_percent"
+```{r}
+str(IV_2014_1$X..Physically.Inactive)
+names(IV_2014_1)[names(IV_2014_1) == 'X..Physically.Inactive'] <- 'inactive_percent'
+```
+Remove IV dataframe
+```{r}
+rm(IV)
+```
+Remake IV dataframe
+```{r}
+IV <- bind_rows(IV_2010_1,IV_2011_1,IV_2012_1,IV_2013_1,IV_2014_1,IV_2015_1,IV_2016_1)
+str(IV)
+names(IV)[names(IV) == 'ï..FIPS'] <- 'FIPS'
+names(IV)[names(IV) == 'MORT_quart.1'] <- 'MORB_quart'
+```
+
+Convert rows to numerics
+```{r}
+IV$HO_rank <- as.numeric(IV$HO_rank)
+IV$HO_quart <- as.numeric(as.character(IV$HO_quart))
+IV$HF_rank <- as.numeric(IV$HF_rank)
+IV$HF_quart <- as.numeric(as.character(IV$HF_quart))
+IV$MORT_rank <- as.numeric(IV$MORT_rank)
+IV$MORT_quart <- as.numeric(as.character(IV$MORT_quart))
+IV$MORB_rank <- as.numeric(IV$MORB_rank)
+IV$MORB_quart <- as.numeric(as.character(IV$MORB_quart))
+IV$HB_rank <- as.numeric(IV$HB_rank)
+IV$HB_quart <- as.numeric(as.character(IV$HB_quart))
+IV$CC_rank <- as.numeric(IV$CC_rank)
+IV$CC_quart <- as.numeric(as.character(IV$CC_quart))
+IV$SE_rank <- as.numeric(IV$SE_rank)
+IV$SE_quart <- as.numeric(as.character(IV$SE_quart))
+IV$PE_rank <- as.numeric(IV$PE_rank)
+IV$PE_quart <- as.numeric(as.character(IV$PE_quart))
+```
+Examine structure of IV
+```{r}
+str(IV)
+```
+
+```{r}
+setwd("C:/Users/Sohini Mukherjee/OneDrive/Documents/Harvard University/Academic/Fall 2017/BST 260 - Data Science I/DS-Proj_Pull")
+save(IV,file="Predictors_1.Rda")
+```
+Predictors_1-Key
+•	N_RankedCounties – no of ranked counties
+•	HO_rank – health outcome rank
+•	HO_quart – health outcome quartile
+•	HF_rank – health factor rank
+•	HF_quart – health factor quartile
+•	MORT_rank – mortality rank
+•	MORT_quart – mortality quartle
+•	MORB_rank – morbidity rank
+•	MORB_quartile – morbidity quartile
+•	HB_rank – health behavior rank
+•	HB_quartile – health behavior quartile
+•	CC_rank – clinical care rank
+•	CC_quart – clinical care quartile
+•	SE_rank – social economic factor rank
+•	SE_quart – social economic factor quartile
+•	PE_rank – physical environment rank
+•	PE_quart – physical environment rank
+•	Deaths
+•	Population
+•	YPPL_rate – Years of potential life lost rate
+•	Fair_percent – Fair/poor percent
+•	PPH_days – poor physical health days
+•	PMH_days – poor mental health days 
+•	LBW_percent – low birth weight
+•	smoking_percent – smoking percent
+•	Obese_percent – obese percent
+•	inactive_percent – physically inactive percent
+•	Binge_percent – binge drinking percent
+•	MV_rate – motor vehicle mortality rate
+•	CHL_100000 – chlamidia per 100000
+•	TeenB_rate – Teen birth rate
+•	Uninsure_percent – uninsured percent
+•	PCP_rate – primary care provider rate
+•	diab_rate – diabetes rate
+•	hospice_percent – hospice rate
+•	college_percent – college graduate percent
+•	unemploy_rate – unemployment
+•	Childpov_percent 
