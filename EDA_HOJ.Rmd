@@ -14,6 +14,57 @@ library(ggplot2)
 library(ggthemes)
 library(broom)
 ```
+## Joining AllMortality, IV, and Race by FIPS
+```{r}
+
+```
+
+## US County Map Code
+```{r}
+## useful: http://mgimond.github.io/ES218/Week12a.html
+
+library(ggplot2)
+library(maps)
+library(rgdal)
+
+# Load the county data from the maps package
+cnty <- map_data("county")
+
+# Plot the counties
+ggplot(cnty, aes(long,lat, group = group)) + 
+  geom_polygon(aes(fill = region), colour = rgb(1,1,1,0.2)) + 
+  theme(legend.position="none") +
+  coord_quickmap()
+
+## Removing background grid
+ggplot(cnty, aes(long,lat, group = group)) + 
+  geom_polygon(aes(fill = region), show.legend = FALSE, colour = rgb(1,1,1,0.2)) + 
+  coord_map("bonne",  param=45) +
+  theme_void()
+
+cnty2 <- cnty %>%
+        mutate(polyname = paste(region,subregion,sep=",")) %>%
+        left_join(county.fips, by="polyname")
+
+tmp <- tempdir()
+link <- "http://www2.census.gov/geo/tiger/GENZ2010/gz_2010_us_050_00_20m.zip"
+filename <- basename(link)
+download.file(link, filename)
+unzip(filename, exdir = tmp )
+shapefile <- readOGR( dsn=tmp, layer = tools::file_path_sans_ext(filename) )
+
+shapefile$FIPS <- as.numeric(substr(shapefile$GEO_ID, 10, 14))
+shapefile$id   <- rownames(shapefile@data)
+
+cnty2 <- fortify(shapefile, id="id")
+
+cnty2.cs <- cnty2 %>%
+            inner_join(shapefile@data, by="id") %>%
+            inner_join(df1, by="FIPS")
+
+
+```
+
 
 ## Exploratory Analysis (post data merge/cleaning)
 
