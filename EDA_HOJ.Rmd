@@ -17,9 +17,33 @@ library(ggplot2)
 library(maps)
 library(rgdal)
 ```
+
+## Preliminary Exploratory Analysis (pre master merge/cleaning)
+
+```{r EDA}
+load("~/Desktop/HSPH/BST260/FinalProject/AllMortality.Rda")
+load("~/Desktop/HSPH/BST260/FinalProject/Predictors_1.Rda")
+load("~/Desktop/HSPH/BST260/FinalProject/Race.Rda")
+
+install.packages("noncensus")
+library(noncensus)
+
+summary(IV)
+summary(AllMortality)
+summary(Race)
+
+levels(AllMortality$cause_name)
+
+AllMortality %>% filter(year_id == 2010) %>%
+        group_by(cause_name) %>% ggplot() + geom_boxplot()
+
+AllMortality %>% group_by(location_id) %>% ggplot() + geom_point(aes(cause_name, lower))
+```
+
 ## Joining AllMortality, IV, and Race by FIPS
 ```{r}
-identical(IV$FIPS, Race$FIPS) #not identical - is this a problem or just reflecting some anticipated missingness? 
+identical(IV$FIPS, Race$FIPS) 
+#not identical - is this a problem or just reflecting some anticipated missingness? 
 
 IV_Race <- left_join(Race, IV, by = "FIPS")
 
@@ -67,37 +91,3 @@ cnty2.cs <- cnty2 %>%
             inner_join(shapefile@data, by="id") %>%
             inner_join(df1, by="FIPS")
 ```
-
-
-## Exploratory Analysis (post data merge/cleaning)
-
-```{r EDA}
-load("~/Desktop/HSPH/BST260/FinalProject/AllMortality.Rda")
-load("~/Desktop/HSPH/BST260/FinalProject/Predictors_1.Rda")
-load("~/Desktop/HSPH/BST260/FinalProject/Race.Rda")
-
-install.packages("noncensus")
-library(noncensus)
-
-data("counties")
-
-## need to convert FIPS in AllMortatlity to numeric value to be able to merge on FIPS
-
-summary(IV)
-summary(AllMortality)
-summary(Race)
-
-levels(AllMortality$cause_name)
-
-AllMortality %>% group_by(location_id) %>% ggplot() + geom_point(aes(cause_name, lower))
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
