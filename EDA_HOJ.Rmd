@@ -13,19 +13,24 @@ library(tidyverse)
 library(ggplot2)
 library(ggthemes)
 library(broom)
-```
-## Joining AllMortality, IV, and Race by FIPS
-```{r}
-
-```
-
-## US County Map Code
-```{r}
-## useful: http://mgimond.github.io/ES218/Week12a.html
-
 library(ggplot2)
 library(maps)
 library(rgdal)
+```
+## Joining AllMortality, IV, and Race by FIPS
+```{r}
+identical(IV$FIPS, Race$FIPS) #not identical - is this a problem or just reflecting some anticipated missingness? 
+
+IV_Race <- left_join(Race, IV, by = "FIPS")
+
+AllMortality_mod <- AllMortality %>% mutate_if(is.character, as.integer) ## changing FIPS to integer object class to be able to merge
+
+All_Merge <- left_join(IV_Race, AllMortality_mod, by = "FIPS") ## master data set with all covariates/outcomes 
+```
+
+## US County Map Code Tools
+```{r}
+## useful: http://mgimond.github.io/ES218/Week12a.html
 
 # Load the county data from the maps package
 cnty <- map_data("county")
@@ -61,8 +66,6 @@ cnty2 <- fortify(shapefile, id="id")
 cnty2.cs <- cnty2 %>%
             inner_join(shapefile@data, by="id") %>%
             inner_join(df1, by="FIPS")
-
-
 ```
 
 
