@@ -1,0 +1,49 @@
+---
+title: "Exploratory Data Analysis"
+author: "HOJ"
+date: "11/20/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(tidyr)
+library(tidyverse)
+library(ggplot2)
+library(ggthemes)
+library(broom)
+```
+
+## Exploratory Analysis (post data merge/cleaning)
+
+```{r EDA}
+load("~/Desktop/HSPH/BST260/FinalProject/AllMortality.Rda")
+load("~/Desktop/HSPH/BST260/FinalProject/Predictors_1.Rda")
+load("~/Desktop/HSPH/BST260/FinalProject/Race.Rda")
+
+install.packages("noncensus")
+library(noncensus)
+
+data("counties")
+
+## need to convert FIPS in AllMortatlity to numeric value to be able to merge on FIPS
+
+summary(IV)
+summary(AllMortality)
+summary(Race)
+
+levels(AllMortality$cause_name)
+
+AllMortality %>% group_by(location_id) %>% ggplot() + geom_point(aes(cause_name, lower))
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
