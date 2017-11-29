@@ -1,0 +1,27 @@
+---
+title: "merge mortality"
+author: "alex"
+date: "11/15/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# information on IHME Mortality Data:
+IHME research applied a novel methodology to death registration data from the National Vital Statistics System (NVSS) in order to estimate annual county-level mortality rates for 21 mutually exclusive causes of death. This dataset provides estimates for cause-specific age-standardized mortality rates at the county level for each state, the District of Columbia, and the United States as a whole for 1980-2014 (quinquennial), as well as the changes in rates during this period.
+
+
+Add Zero's to FISP codes less than 6 numbers so we can merge dataframes easily by FISP 
+```{r}
+#add leading zeros
+library(stringr)
+AllMortality$FIPS <- str_pad(AllMortality$FIPS, width=5, side="left", pad="0")
+```
+Save Mortality Table
+```{r}
+save(AllMortality, file="AllMortality.Rda")
+```
+
+
