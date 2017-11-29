@@ -103,9 +103,15 @@ Reduced to South - looking at cause of death
 bothstate <- filter(state_mortality, sex_id == 3)
 southmort <- filter(bothstate, region == "South")
 
-allcause <- allcause %>% group_by(location_id, region, year_id, state, abb) %>%
+southmort <- southmort %>% group_by(cause_id, cause_name, location_id, region, year_id, state, abb) %>%
      summarize(mean_mx = mean(mx),
                sd_mx = sd(mx),
                n = n()) 
+```
+
+
+
+```{r}
+
 ```
 
