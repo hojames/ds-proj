@@ -27,7 +27,6 @@ load("~/Desktop/HSPH/BST260/FinalProject/AllMortality.Rda")
 load("~/Desktop/HSPH/BST260/FinalProject/Predictors_1.Rda")
 load("~/Desktop/HSPH/BST260/FinalProject/Race.Rda")
 
-install.packages("noncensus") ## exploring a package using census data 
 library(noncensus)
 
 summary(IV)
@@ -36,10 +35,10 @@ summary(Race)
 
 levels(AllMortality$cause_name)
 
-AllMortality %>% filter(year_id == 2010) %>%
-        group_by(cause_name) %>% ggplot() + geom_boxplot()
-
-AllMortality %>% group_by(location_id) %>% ggplot() + geom_point(aes(cause_name, lower))
+AllMortality %>% 
+        group_by(location_id) %>% 
+        ggplot() + 
+        geom_point(aes(cause_name, lower))
 ```
 
 ## Joining AllMortality, IV, and Race by FIPS
