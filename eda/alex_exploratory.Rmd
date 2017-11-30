@@ -19,6 +19,12 @@ library(gridExtra)
 
 ## general analysis
 
+Popsexage
+race
+predictors 
+rankings (predictors)
+IV race age 
+Mortality trends -- 
 
 Cause of death in 2010
 ```{r}
