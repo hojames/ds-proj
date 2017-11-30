@@ -1,0 +1,83 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+The code below:
+*joins independent variables, race, and age to the mortality data
+*adds region info to this merged table
+*separates mortality into state and county mortality rates
+
+```{r}
+
+#ADD REGION INFO
+
+library(stringr)
+library(noncensus)
+library(tidyverse)
+library(dslabs)
+library(ggplot2)
+library(dplyr)
+library(ggthemes)
+library(ggrepel)
+library(RColorBrewer)
+data(murders)
+
+
+load("~/Documents/Fall2017/BST260/FinalProject/ds-proj/Age.Rda")
+load("~/Documents/Fall2017/BST260/FinalProject/ds-proj/AllMortality.Rda")
+load("~/Documents/Fall2017/BST260/FinalProject/ds-proj/Race.Rda")
+load("~/Documents/Fall2017/BST260/FinalProject/ds-proj/Predictors_1.Rda")
+
+stateinfo <- murders %>% select(region, state, abb)
+
+#make FIPS numeric for merging
+AllMortality$FIPS <- as.numeric(as.character(AllMortality$FIPS)) 
+Age$FIPS <- as.numeric(as.character(Age$FIPS))
+Race$FIPS <- as.numeric(as.character(Race$FIPS))
+IV$FIPS <- as.numeric(as.character(IV$FIPS))
+
+#merge on shared columns 
+IV_Race <- left_join(Race, IV, by = c("FIPS"="FIPS","year"="year"))
+IV_Race_Age <- left_join(IV_Race, Age, by = c("FIPS"="FIPS","County_State"="County_State", "year"="year","Total"="Total"))
+
+#make county_state, county, state, column names lower case for merging
+names(IV_Race_Age)[2] <- tolower(names(IV_Race_Age)[2])
+names(IV_Race_Age)[10:11] <- tolower(names(IV_Race_Age)[10:11])
+
+#rename column for merging
+names(state_mortality )[names(state_mortality ) == 'location_name'] <- 'state'
+
+#Separate data frame into state mortality data frame and county mortality data frame
+state_mortality <- AllMortality %>% filter(FIPS<=00056)
+names(state_mortality )[names(state_mortality ) == 'location_name'] <- 'state'
+
+county_mortality <- AllMortality %>% filter(FIPS>00056)
+names(county_mortality )[names(county_mortality ) == 'location_name'] <- 'county'
+
+#now we are working with state mortality, county mortality, and county variables for race and health risks
+
+stateinfo_ivraceage <- IV_Race_Age %>% select(county_state, county, state, FIPS)
+stateinfo_ivraceage$state <- as.character(as.factor(stateinfo_ivraceage$state)) 
+state_mortality$state <- as.character(as.factor(state_mortality$state)) 
+# makes 'state' a character class so it merges
+
+stateinfo <- left_join(stateinfo, stateinfo_ivraceage , by = "state") #combine all geo info
+stateinfo <- stateinfo %>% distinct(region, abb, state, county_state, county, FIPS) #collapse
+
+countyinfo <- stateinfo[c(1, 3, 2, 5, 4, 6)] #reorder and keep
+IVinfo <- stateinfo[c("region","FIPS")]
+stateinfo <- stateinfo[c("region","abb","state")]
+
+
+county_mortality <- left_join(county_mortality, countyinfo, by = "FIPS")
+state_mortality <- left_join(state_mortality, stateinfo, by = "state")
+IV_Race_Age <- left_join(IV_Race_Age, IVinfo, by = "FIPS")
+
+save(county_mortality, file="county_mortality-EG.Rda")
+save(state_mortality, file="state_mortality-EG.Rda")
+save(IV_Race, file="IV_Race-EG.Rda")
+
+```
+
+
