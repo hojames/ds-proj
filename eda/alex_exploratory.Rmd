@@ -19,12 +19,18 @@ library(gridExtra)
 
 ## general analysis
 
-Popsexage
-race
-predictors 
-rankings (predictors)
-IV race age 
-Mortality trends -- 
+Lowest LE
+```{r}
+tail(sort(le2014$LE2014, decreasing = TRUE), 5)
+```
+
+```{r}
+which(le2014$LE2014 == 69.05)
+```
+
+
+
+
 
 Cause of death in 2010
 ```{r}
