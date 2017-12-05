@@ -25,9 +25,14 @@ tail(sort(le2014$LE2014, decreasing = TRUE), 5)
 ```
 
 ```{r}
-which(le2014$LE2014 == 69.05)
+which(le2014$LE2014 == 66.81)
 ```
 
+```{r}
+ind <- order(le2014$LE2014) 
+le2014$county[ind] 
+le2014$state[ind]
+```
 
 
 
