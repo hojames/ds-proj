@@ -21,19 +21,72 @@ library(gridExtra)
 
 Lowest LE
 ```{r}
-tail(sort(le2014$LE2014, decreasing = TRUE), 5)
+tail(sort(ledata$LE2014, decreasing = TRUE), 5)
 ```
 
 ```{r}
-which(le2014$LE2014 == 66.81)
+which(ledata$LE2014 == 66.81)
 ```
 
 ```{r}
-ind <- order(le2014$LE2014) 
-le2014$county[ind] 
-le2014$state[ind]
+ind <- order(ledata$LE2014) 
+ledata$county[ind] 
+ledata$state[ind]
 ```
 
+lowest le change:
+```{r}
+ind <- order(ledata$change) 
+ledata$county[ind] 
+ledata$state[ind]
+ledata$change[ind]
+```
+
+avg change in states 
+```{r}
+ledata2 <- ledata %>% group_by(state) %>%
+     summarize(mean_change = mean(change),
+               sd_change = sd(change),
+               n = n()) 
+```
+
+drop state summary observation
+```{r}
+ledata2 <- ledata2[-c(52:103), ]
+```
+
+
+which state has avg lowest change
+```{r}
+ind <- order(ledata2$mean_change) 
+ledata2$state[ind] 
+ledata2$mean_change[ind]
+```
+
+only looking at state avg change in le 
+```{r}
+lestate <- lestate[!grepl(c("County", "Area", "Municipality", "Borough", "Parish", "City"), lestate$county),]
+lestate <- lestate[!grepl("Area", lestate$county),]
+lestate <- lestate[!grepl("Municipality", lestate$county),]
+lestate <- lestate[!grepl("Borough", lestate$county),]
+lestate <- lestate[!grepl("Parish", lestate$county),]
+lestate <- lestate[!grepl("City", lestate$county),]
+lestate <- filter(ledata, county)
+ind <- order(ledata2$mean_change) 
+ledata2$state[ind] 
+ledata2$mean_change[ind]
+```
+drop DC dublicate
+```{r}
+lestate <- lestate[-c(330), ]
+```
+
+find lowest state
+```{r}
+ind <- order(lestate$change) 
+lestate$state[ind] 
+lestate$change[ind]
+```
 
 
 
