@@ -82,3 +82,10 @@ AllMortality <- dplyr::filter(AllMortality, year_id >= 2010) # keep only data fr
 save(AllMortality, file="AllMortality.Rda")
 ```
 
+
+# Load LE data
+```{r}
+setwd(~/Dropbox/Harvard_Masters/Semester_Work/Fall_2017/BST260_DataScience/FinalProject/finalproject/raw_data)
+le2014 <- read.csv(file="le_2014_IHME.csv", header=TRUE, sep=",")
+```
+
