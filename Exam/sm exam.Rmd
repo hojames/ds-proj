@@ -1,0 +1,144 @@
+---
+title: "sm exam"
+author: "SM"
+date: "December 6, 2017"
+output: html_document
+---
+
+###### Data Wrangling
+
+The first step is to import the data into R and, when using the _tidyverse_, tidy the data. The first step in the data analysis process  usually involves several, often complicated, steps to covert data from its raw form to the _tidy_ form that greatly facilitates the rest of the analysis. We refer to this process as `data wrangling`.
+
+##Text vs binary files (Data Import)
+Most people classify files in two categories: binary files and ASCII (text) files.
+Any program you write (C/C++/Perl/HTML) is almost surely an ASCII file.
+An ASCII file is defined as a file that consists of ASCII characters. It's usually created by using a text editor like emacs, pico, vi, Notepad, etc.
+
+```{r}
+getwd() ##working directory
+system.file("extdata", package="dslabs") ##external data directory
+path <- system.file("extdata", package="dslabs")
+list.files(path) ##see all files
+filename <- "murders.csv"
+fullpath <- file.path(path, filename)
+fullpath
+file.copy(fullpath, getwd())
+file.exists(filename)
+
+options( stringsAsFactors=FALSE ) ##argument to not convert characters to factors
+read_lines("murders.csv", n_max = 3) ##read a few lines
+dat <- read_csv(filename) ##read the csv file
+```
+
+##Read from internet
+```{r}
+url <- "https://raw.githubusercontent.com/rafalab/dslabs/master/inst/extdata/murders.csv"
+dat <- read_csv(url)
+##or
+tmp_filename <- tempfile()
+download.file(url, tmp_filename)
+dat <- read_csv(tmp_filename)
+file.remove(tmp_filename)
+head(dat)
+file.remove(filename)
+```
+
+##Wide and long data
+Examples and specifics - http://www.cookbook-r.com/Manipulating_data/Converting_data_between_wide_and_long_format/
+
+##Dates and times
+```{r}
+library(lubridate)
+data.frame(date = days, ##extract values
+           month = month(dates),
+           day = day(dates),
+           year = year(dates))
+month(dates, label = TRUE) ##extract month labels
+```
+##Filter and Subset data
+```{r}
+data("gapminder")
+tidy_data <- gapminder %>% 
+  filter(country %in% c("South Korea", "Germany")) %>%
+  select(country, year, fertility)
+##filter-chooses specific variables
+##select - chooses columns by name
+```
+
+##Join Data(Combining tables)
+There are a lot of ways to combine two tables. 
+The best way to do it depends on the data. 
+Good list here - https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf
+
+Useful - Provides message telling us how they are different
+```{r}
+setequal(dat1, dat2) 
+```
+
+##Webscraping
+```{r}
+library(rvest)
+url <- "https://en.wikipedia.org/wiki/Murder_in_the_United_States_by_state"
+h <- read_html(url)
+```
+The different parts of an HTML document, often defined with a message in between  `<` and `>`  are referred to as _nodes_.
+
+```{r}
+tab <- h %>% html_node("table") ##extracts first table of node
+```
+
+##string and reshaping
+There are a lot of codes here that depend on your type of data
+
+#####Conditional Probability
+
+##Bayes' Theorem
+$$
+\mbox{Pr}(A \mid B)  =  \frac{\mbox{Pr}(B \mid A)\mbox{Pr}(A)}{\mbox{Pr}(B)} 
+$$
+
+Example with disease- Test for disease has 99% accuracy
+$$
+\mbox{Prob}(+ \mid D=1)=0.99, \mbox{Prob}(- \mid D=0)=0.99 
+$$
+
+$$
+\begin{aligned}
+\mbox{Pr}(D=1 \mid +) & =  \frac{ P(+ \mid D=1) \cdot P(D=1)} {\mbox{Pr}(+)} \\
+& =  \frac{\mbox{Pr}(+ \mid D=1)\cdot P(D=1)} {\mbox{Pr}(+ \mid D=1) \cdot P(D=1) + \mbox{Pr}(+ \mid D=0) \mbox{Pr}( D=0)} 
+\end{aligned}
+$$
+
+How to solve the example: 
+```{r}
+prev <- 0.00025
+N <- 100000
+outcome <- sample(c("Disease","Healthy"), N, replace = TRUE, prob = c(prev,1-prev))
+
+N_D <- sum(outcome == "Disease")
+N_D
+N_H <- sum(outcome == "Healthy")
+N_H
+
+accuracy <- 0.99
+test <- vector("character",N)
+test[outcome=="Disease"]  <- sample(c("+","-"), N_D, replace=TRUE, prob = c(accuracy, 1 - accuracy))
+test[outcome=="Healthy"]  <- sample(c("-","+"), N_H, replace=TRUE, prob = c(accuracy, 1 - accuracy))
+```
+
+####CLT 
+The CLT tells us that the distribution function for a sum of draws is approximately normal. We also learned that dividing a normally distributed random variable by a constant results in a normally distributed variable. This implies that the distribution of $\bar{X}$ is approximately normal. So in summary we have the $\bar{X}$ has an approximately normal distribution with expected value $p$ and standard error $\sqrt{p(1-p)/N}$. 
+
+```{r}
+X_hat <- 0.48
+se <- sqrt(X_hat*(1-X_hat)/25)
+se
+pnorm(0.01/se) - pnorm(-0.01/se)
+```
+
+Margin of error: 
+```{r}
+2*se
+```
+##Monte Carlo simulation - code depends on example
+##Spread  
