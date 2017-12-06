@@ -68,3 +68,42 @@ Remember Euclidean distance is the distance between two points, and you could us
 $$
 \mbox{dist}(1,2) = \sqrt{ \sum_{j=1}^{784} (Y_{1,j}-Y_{2,j })^2 }
 $$ 
+
+#### Assessment
+
+1. For each of the following determine if the outcome is continuous or categorical
+
+a. Digit reader - cat
+b. Movie recommendations - con
+c. Spam filter - cat
+d. Hospitalizations - con
+e. Siri - cat
+
+
+2. How many features are availalbe to us for prediction in the digits dataset? 28*28 = 784
+
+
+3. Create a predictor by rounding the heights to the nearest inch. What is the conditional probability of being Male if you are 70 inches tall?
+
+```{r}
+heights <- heights %>% mutate(round = round(heights$height))
+
+heights %>% filter(round == 70) %>% summarize(mean(sex =="Male"))
+
+```
+
+
+4. Define the following predictor
+
+```{r}
+heights %>% mutate(X = round(height)) %>%
+  group_by(X) %>%
+  summarize(pr = mean(sex=="Male")) %>%
+                      ggplot(aes(X,pr)) + geom_point()
+  
+
+```
+
+Estimate $p(x) = \mbox{Pr}( y = 1 | X=x)$ for each $x$ and plot it against $x$.
+
+
