@@ -14,6 +14,15 @@ $$
 
 Using PCA on netflix:
 ```{r}
+
+r <- train_small %>% 
+  select(userId, movieId, resids) %>%
+  spread(movieId, resids) %>% 
+  as.matrix()
+
+rownames(r) <- r[,1]
+r <- r[,-1]
+
 r[is.na(r)] <- 0
 pca <- prcomp(r - rowMeans(r), center=TRUE, scale=FALSE) 
 
