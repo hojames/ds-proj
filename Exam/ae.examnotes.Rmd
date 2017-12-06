@@ -123,7 +123,7 @@ geom_smooth(method = "lm")
 
 computing linear regression model --> linear-models.Rmd
 ```{r}
-fit <- lm(y ~ x, data = df)
+fit <- lm(y ~ X1 + X2 + X3, data = df)
 summary(fit)
 ```
 
