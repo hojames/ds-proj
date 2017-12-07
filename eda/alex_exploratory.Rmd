@@ -21,6 +21,7 @@ library(gridExtra)
 
 Order of Counties with the Lowest LE (Lowest - Highest)
 ```{r}
+load(file = "finalLE.rda")
 ind <- order(ledata$LE2014) 
 ledata$county[ind] 
 ledata$state[ind]
@@ -60,12 +61,14 @@ P1 <- ggplot(data = mle, aes(county,  change)) +
   geom_hline(yintercept = -0.04, col = "red") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   ylab("Change in LE") +
+  ggtitle("Change in Life Expectancy from 2010 - 2014 across Mississippi") +
    theme(legend.position = "none") 
 G1 <- ggplot(data = wvle, aes(county,  change)) +
   geom_boxplot() +
   geom_hline(yintercept = -0.04, col = "red") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   ylab("Change in LE") +
+  ggtitle("Change in Life Expectancy from 2010 - 2014 across West Virginia") +
    theme(legend.position = "none") 
 grid.arrange(P1, G1)
 ```
@@ -85,6 +88,7 @@ two2 <- filter(two, cause_id == 294, sex_id == 3)
 p1 <-  ggplot(data = two2, aes(year_id, mx, col = location_name)) 
 p1 +  geom_line() +
    geom_text(data = label, aes(x, y, label = States), size = 5) +
+  ggtitle("All Cause Mortality from 2010 - 2014") +
    theme(legend.position = "none")
 ```
 
@@ -98,6 +102,7 @@ three2 <- filter(three, cause_id == 294, sex_id == 3)
 p1 <-  ggplot(data = three2, aes(year_id, mx, col = location_name)) 
 p1 +  geom_line() +
    geom_text(data = label, aes(x, y, label = State), size = 5) +
+  ggtitle("All Cause Mortality from 2010-2015") +
    theme(legend.position = "none")
 ```
 
