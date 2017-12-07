@@ -19,7 +19,7 @@ getwd()
 ```
 
 ```{r}
-RWJFMeasures_2015 <- read.csv("C:/Users/Sohini Mukherjee/OneDrive/Documents/Harvard University/Academic/Fall 2017/BST 260 - Data Science I/Final Project/RWJF/zscores/IV_2015_healthrankmeasures.csv")
+RWJFMeasures_2015 <- read.csv("C:/Users/Sohini Mukherjee/OneDrive/Documents/Harvard University/Academic/Fall 2017/BST 260 - Data Science I/Final Project/RWJF/zscores/IV_2014_healthrank.csv")
 str(RWJFMeasures_2015)
 ```
 
@@ -33,6 +33,11 @@ RWJFMeasures_2015$HB_rank <- as.numeric(as.character(RWJFMeasures_2015$HB_rank))
 RWJFMeasures_2015$CC_rank <- as.numeric(as.character(RWJFMeasures_2015$CC_rank))
 RWJFMeasures_2015$SE_rank <- as.numeric(as.character(RWJFMeasures_2015$SE_rank))
 RWJFMeasures_2015$PE_rank <- as.numeric(as.character(RWJFMeasures_2015$PE_rank))
+```
+
+
+```{r}
+str(RWJFMeasures_2015)
 ```
 
 ```{r}
@@ -64,21 +69,23 @@ RWJFMeasures_2015$FoodEnv_Index <- ave(RWJFMeasures_2015$FoodEnv_Index, RWJFMeas
 RWJFMeasures_2015$inactive_percent <- ave(RWJFMeasures_2015$inactive_percent, RWJFMeasures_2015$State, FUN=scale)
 RWJFMeasures_2015$Exercise_access_percent <- ave(RWJFMeasures_2015$Exercise_access_percent, RWJFMeasures_2015$State, FUN=scale)
 RWJFMeasures_2015$Binge_percent <- ave(RWJFMeasures_2015$Binge_percent, RWJFMeasures_2015$State, FUN=scale)
-RWJFMeasures_2015$alcohol_drivingdeaths <- ave(RWJFMeasures_2015$alcohol_drivingdeaths, RWJFMeasures_2015$State, FUN=scale)
+```
+
+```{r}
 RWJFMeasures_2015$CHL_100000 <- ave(RWJFMeasures_2015$CHL_100000, RWJFMeasures_2015$State, FUN=scale)
 RWJFMeasures_2015$TeenB_rate <- ave(RWJFMeasures_2015$TeenB_rate, RWJFMeasures_2015$State, FUN=scale)
 RWJFMeasures_2015$Uninsure_percent <- ave(RWJFMeasures_2015$Uninsure_percent, RWJFMeasures_2015$State, FUN=scale)
 RWJFMeasures_2015$PCP_rate <- ave(RWJFMeasures_2015$PCP_rate, RWJFMeasures_2015$State, FUN=scale)
 RWJFMeasures_2015$dentist_rate <- ave(RWJFMeasures_2015$dentist_rate, RWJFMeasures_2015$State, FUN=scale)
-RWJFMeasures_2015$MHP.Rate <- ave(RWJFMeasures_2015$MHP.Rate, RWJFMeasures_2015$State, FUN=scale)
-RWJFMeasures_2015$prevent_hosp_rate <- ave(RWJFMeasures_2015$prevent_hosp_rate, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$MHP_rate <- ave(RWJFMeasures_2015$MHP_rate, RWJFMeasures_2015$State, FUN=scale)
+
 RWJFMeasures_2015$hbac_rate <- ave(RWJFMeasures_2015$hbac_rate, RWJFMeasures_2015$State, FUN=scale)
 RWJFMeasures_2015$mammo_percent <- ave(RWJFMeasures_2015$mammo_percent, RWJFMeasures_2015$State, FUN=scale)
 RWJFMeasures_2015$Hsgrad_rate <- ave(RWJFMeasures_2015$Hsgrad_rate, RWJFMeasures_2015$State, FUN=scale)
 RWJFMeasures_2015$college_percent <- ave(RWJFMeasures_2015$college_percent, RWJFMeasures_2015$State, FUN=scale)
 RWJFMeasures_2015$unemploy_rate <- ave(RWJFMeasures_2015$unemploy_rate, RWJFMeasures_2015$State, FUN=scale)
 RWJFMeasures_2015$Childpov_percent <- ave(RWJFMeasures_2015$Childpov_percent, RWJFMeasures_2015$State, FUN=scale)
-RWJFMeasures_2015$income_ratio <- ave(RWJFMeasures_2015$income_ratio, RWJFMeasures_2015$State, FUN=scale)
+
 RWJFMeasures_2015$singleparent_percent <- ave(RWJFMeasures_2015$singleparent_percent, RWJFMeasures_2015$State, FUN=scale)
 RWJFMeasures_2015$social_assoc_rate <- ave(RWJFMeasures_2015$social_assoc_rate, RWJFMeasures_2015$State, FUN=scale)
 RWJFMeasures_2015$violentcrime_rate <- ave(RWJFMeasures_2015$violentcrime_rate, RWJFMeasures_2015$State, FUN=scale)
@@ -89,8 +96,23 @@ RWJFMeasures_2015$driving_alone_percent <- ave(RWJFMeasures_2015$driving_alone_p
 RWJFMeasures_2015$longcommute_percent <- ave(RWJFMeasures_2015$longcommute_percent, RWJFMeasures_2015$State, FUN=scale)
 ```
 
+
 ```{r}
-save(RWJFMeasures_2015, file = "C:/Users/Sohini Mukherjee/OneDrive/Documents/Harvard University/Academic/Fall 2017/BST 260 - Data Science I/Homework/ds-proj_pull/Measures_2015_Z-scores.Rda")
+RWJFMeasures_2015$acscrate <- ave(RWJFMeasures_2015$acscrate, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$injurydeathrate <- ave(RWJFMeasures_2015$injurydeathrate, RWJFMeasures_2015$State, FUN=scale)
+```
+
+
+Mistake made - use for 2014 data
+```{r}
+RWJFMeasures_2014 <- RWJFMeasures_2015
+```
+
+
+
+
+```{r}
+save(RWJFMeasures_2014, file = "C:/Users/Sohini Mukherjee/OneDrive/Documents/Harvard University/Academic/Fall 2017/BST 260 - Data Science I/Homework/ds-proj_pull/Measures_2014_Z-scores.Rda")
 ```
 
 
