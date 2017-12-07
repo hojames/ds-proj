@@ -17,68 +17,30 @@ library(ggthemes)
 library(gridExtra)
 ```
 
-## general analysis
+## EDA
 
-Lowest LE
-```{r}
-tail(sort(ledata$LE2014, decreasing = TRUE), 5)
-```
-
-```{r}
-which(ledata$LE2014 == 66.81)
-```
-
+Order of Counties with the Lowest LE (Lowest - Highest)
 ```{r}
 ind <- order(ledata$LE2014) 
 ledata$county[ind] 
 ledata$state[ind]
 ```
 
-lowest le change:
+Order of Counties with the largest decreased LE (from 2010 - 2014)
 ```{r}
 ind <- order(ledata$change) 
 ledata$county[ind] 
-ledata$state[ind]
 ledata$change[ind]
 ```
 
-avg change in states 
+Average change in LE from 2010 - 2014 in States: 
 ```{r}
-ledata2 <- ledata %>% group_by(state) %>%
-     summarize(mean_change = mean(change),
-               sd_change = sd(change),
-               n = n()) 
-```
-
-drop state summary observation
-```{r}
-ledata2 <- ledata2[-c(52:103), ]
-```
-
-
-which state has avg lowest change
-```{r}
-ind <- order(ledata2$mean_change) 
-ledata2$state[ind] 
-ledata2$mean_change[ind]
-```
-
-only looking at state avg change in le 
-```{r}
-lestate <- lestate[!grepl(c("County", "Area", "Municipality", "Borough", "Parish", "City"), lestate$county),]
+lestate <- ledata[!grepl("County", ledata$county),]
 lestate <- lestate[!grepl("Area", lestate$county),]
 lestate <- lestate[!grepl("Municipality", lestate$county),]
 lestate <- lestate[!grepl("Borough", lestate$county),]
 lestate <- lestate[!grepl("Parish", lestate$county),]
 lestate <- lestate[!grepl("City", lestate$county),]
-lestate <- filter(ledata, county)
-ind <- order(ledata2$mean_change) 
-ledata2$state[ind] 
-ledata2$mean_change[ind]
-```
-drop DC dublicate
-```{r}
-lestate <- lestate[-c(330), ]
 ```
 
 find lowest state
@@ -88,100 +50,72 @@ lestate$state[ind]
 lestate$change[ind]
 ```
 
-
-
-Cause of death in 2010
+Graph of change in le (from 2010-2014) in each county in Mississippi and West Virginia 
 ```{r}
-bothmortality <- filter(AllMortality, sex_id == 3) 
+mle <- ledata %>% mutate(rn = row_number()) %>% filter(rn <= 1509, rn >= 1427)
+wvle <- ledata %>% mutate(rn = row_number()) %>% filter(rn <= 3097, rn >= 3042)
 
-p2 <- ggplot(data = bothmortality, aes(cause_id, year_id)) 
-p2 + geom_point()
-
-mort2010 <- filter(bothmortality, year_id == 2010)
-p1 <- ggplot(data = mort2010, aes(cause_id))
-p1 + geom_histogram()
+P1 <- ggplot(data = mle, aes(county,  change)) +
+  geom_boxplot() +
+  geom_hline(yintercept = -0.04, col = "red") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  ylab("Change in LE") +
+   theme(legend.position = "none") 
+G1 <- ggplot(data = wvle, aes(county,  change)) +
+  geom_boxplot() +
+  geom_hline(yintercept = -0.04, col = "red") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  ylab("Change in LE") +
+   theme(legend.position = "none") 
+grid.arrange(P1, G1)
 ```
 
-HIV/AIDS/TB death across years
-
+How many counties had negative change in LE
 ```{r}
-hivaids <- filter(bothmortality, cause_id == 296)
-p2 <- ggplot(data = hivaids, aes(year_id)) 
-p2 + geom_histogram(bins = 30)
+sum(mle$change < 0) #55 out of 82 counties have negative changes in LE in Mississippi
+sum(wvle$change <0) #34 out of 55 counties have negative changes in LE in West Virginia
 ```
 
-Reduced All Cause by state
+All Cause Mortality in Mississippii and West Virginia
 ```{r}
-bothstate <- filter(state_mortality, sex_id == 3)
-allcause <- filter(bothstate, cause_id == 294)
-
-allcause <- allcause %>% group_by(location_id, region, year_id, state, abb) %>%
-     summarize(mean_mx = mean(mx),
-               sd_mx = sd(mx),
-               n = n()) 
-
-p3 <- ggplot(data = allcause, aes(region, mean_mx)) 
-p3 + geom_point()
-```
-
-Breakdown by year
-```{r}
-g <- allcause %>% filter(year_id == 2010) %>%
-  group_by(year_id) %>%
-  ggplot(aes(region, mean_mx)) + 
-  geom_point() +
-  xlab("Region") +
-  ylab("Mean All-Cause Mortality") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-
-h <- allcause %>% filter(year_id == 2011) %>%
-  group_by(year_id) %>%
-  ggplot(aes(region, mean_mx)) + 
-  geom_point() +
-  xlab("Region") +
-  ylab("Mean All-Cause Mortality") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
-
-i <- allcause %>% filter(year_id == 2012) %>%
-  group_by(year_id) %>%
-  ggplot(aes(region, mean_mx)) + 
-  geom_point() +
-  xlab("Region") +
-  ylab("Mean All-Cause Mortality") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-
-k <- allcause %>% filter(year_id == 2013) %>%
-  group_by(year_id) %>%
-  ggplot(aes(region, mean_mx)) + 
-  geom_point() +
-  xlab("Region") +
-  ylab("Mean All-Cause Mortality") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-
-z <- allcause %>% filter(year_id == 2014) %>%
-  group_by(year_id) %>%
-  ggplot(aes(region, mean_mx)) + 
-  geom_point() +
-  xlab("Region") +
-  ylab("Mean All-Cause Mortality") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-grid.arrange(g, h, i, k, z)
-```
-
-Reduced to South - looking at cause of death
-```{r}
-bothstate <- filter(state_mortality, sex_id == 3)
-southmort <- filter(bothstate, region == "South")
-
-southmort <- southmort %>% group_by(cause_id, cause_name, location_id, region, year_id, state, abb) %>%
-     summarize(mean_mx = mean(mx),
-               sd_mx = sd(mx),
-               n = n()) 
+States <- c("Mississippi", "West Virginia")
+label <- data.frame(location_name = States, x = c(2013,2012), y = c(1025,992))
+two <- AllMortality %>% filter(location_name %in% c("Mississippi", "West Virginia"))
+two2 <- filter(two, cause_id == 294, sex_id == 3) 
+p1 <-  ggplot(data = two2, aes(year_id, mx, col = location_name)) 
+p1 +  geom_line() +
+   geom_text(data = label, aes(x, y, label = States), size = 5) +
+   theme(legend.position = "none")
 ```
 
 
-
+But how does that compare to the state that had the most improved LE from 2010 - 2014?
 ```{r}
+State <- c("Mississippi", "West Virginia", "California")
+label <- data.frame(location_name = State, x = c(2013,2012, 2013), y = c(1010,975, 700))
+three <- AllMortality %>% filter(location_name %in% c("Mississippi", "West Virginia", "California"))
+three2 <- filter(three, cause_id == 294, sex_id == 3) 
+p1 <-  ggplot(data = three2, aes(year_id, mx, col = location_name)) 
+p1 +  geom_line() +
+   geom_text(data = label, aes(x, y, label = State), size = 5) +
+   theme(legend.position = "none")
+```
 
+How do the worst counties in each state for change in LE fair in the CHR ranking?
+```{r}
+ind <- order(mle$change) 
+mle$county[ind] #Grenada County, -0.52
+mle$change[ind]
+
+ind <- order(wvle$change) 
+wvle$county[ind] #Logan County, 
+wvle$change[ind] #-0.37
+
+#find rank
+IV2 <- dplyr::filter(IV, State == c("West Virginia", "Mississippi"))
+Grenada <- IV2 %>% filter(County == "Grenada")
+Logan <- IV2 %>% filter(County == "Logan")
+Logan # Logan ranked 49 in 2011 and 51 in 2015 out of 55
+Grenada # Grenada ranked 54 in 2013 and 51 in 2015 out of 82
 ```
 
