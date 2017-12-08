@@ -22,6 +22,7 @@ library(gridExtra)
 Order of Counties with the Lowest LE (Lowest - Highest)
 ```{r}
 load(file = "finalLE.rda")
+file.exists("finalLE.rda")
 ind <- order(ledata$LE2014) 
 ledata$county[ind] 
 ledata$state[ind]
