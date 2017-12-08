@@ -1,4 +1,4 @@
-## Understanding Life Expectancy Declines in the United States by Principal Component Analysis
+## Understanding Life Expectancy Declines in the United States through Exploratory Data Analysis & Principal Component Analysis
 
 You can use the [editor on GitHub](https://github.com/hojames/ds-proj/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 
