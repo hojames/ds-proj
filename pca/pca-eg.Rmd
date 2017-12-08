@@ -1,0 +1,196 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+```
+
+
+PCA
+
+Explore data
+```{r}
+
+
+zscores <- RWJFMeasures_2014[c(1:4,22:49)] #subset health factor variables only
+names(zscores) # we are missing alcohol driving deaths!
+
+# library(readxl) #download from CHR
+# alcoholdeaths <- read_excel("~/Documents/Fall2017/BST260/FinalProject/alcoholdeaths.xlsx", 
+#     col_types = c("numeric", "text", "text", 
+#         "numeric"))
+# View(alcoholdeaths)
+
+alcoholdeaths$alc_drivingdeath <- ave(alcoholdeaths$alc_drivingdeath, alcoholdeaths$State, FUN=scale) #zscore
+zscores <- left_join(zscores,alcoholdeaths, by = c("FIPS"="FIPS","State"="State","County"="County")) #join to main data set
+
+#it would also be great to have existing HF ranks to compare later
+HFrank <- read_excel("~/Documents/Fall2017/BST260/FinalProject/HFrank.xlsx", 
+    col_types = c("numeric","numeric"))
+View(HFrank)
+
+zscores <- left_join(zscores,HFrank, by = c("FIPS"="FIPS")) #join to main data set
+
+names(zscores) #now we have all our variables. great!
+
+zMS_KY <- zscores %>% filter(State== "Mississippi" | State == "Kentucky") # two states with declinine LE
+
+save(zMS_KY, file="Z-scores_MS_KY")
+
+```
+
+```{r}
+#Create variables-only table for MS and KY
+varMS <- zMS_KY%>% filter(State=="Mississippi")
+varMS <- varMS[c(5:33)] 
+
+varKY <- zMS_KY%>% filter(State=="Kentucky")
+varKY <- varKY[c(5:33)] 
+```
+
+```{r}
+MS.pca <- prcomp(varMS,
+                 center = TRUE,
+                 scale. = TRUE) 
+```
+There is an error since there are missing values. How do we handle this? We could delete the rows where there is missing values and see what we get...
+```{r}
+sum(is.na(varMS))
+```
+
+We have 91 missing values across the 82 counties for MS. 
+
+```{r}
+varMS.na.omit<- na.omit(varMS)
+```
+
+Now we have 36 counties after ommitting NAs. This is losing a lot of data. Could we fill in misisng values with 0 (the mean, since we are using z-scores)?
+
+```{r}
+varMS <- varMS %>% mutate_all(funs(ifelse(is.na(.), 0, .)))
+sum(is.na(varMS))
+```
+
+With NAs replaced with 0s, we can try PCA again.
+
+```{r}
+MS.pca <- prcomp(varMS,
+                 center = TRUE,
+                 scale. = TRUE) 
+summary(MS.pca)
+```
+
+From our summary of PCA for health factors in Missisippi, we see that the first PC accounts for 27.25% of variance. If we wanted to use four components, like the four fous areas that the CHR currently uses, then we would account for 54.7% of total variance. We would need 8 PCs to get to 71%, 11 to get to 80%, and 16 to get to 90%. At 16 PCs, it would be very difficult to keep track of 16 domains for something like the County Health Rankings, and even at 8 it is still unwieldly. Perhaps we should focus on a smaller number of components, but consider what each component is trying to tell us and also try the 'rule of 1' when looking at a scree plot. 
+
+```{r}
+loadings <- as.data.frame(MS.pca$rotation) #create a data frame of PCA loadings
+```
+
+Let's look at the loadings on the first four PCs:
+
+```{r}
+library(reshape2)
+melted <-  melt(MS.pca$rotation[,1:4])
+
+melted <- full_join(melted, factornames, by = c("Var1"= "Measure_Abb"))
+
+PC1 <- melted %>% filter(Var2=="PC1") %>% ggplot(aes(x = reorder(Measure,-value),y = value, fill=Factors)) + geom_bar(stat="identity") + facet_wrap(~Var2) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+PC2 <- melted %>% filter(Var2=="PC2") %>% ggplot(aes(x = reorder(Measure,-value),y = value, fill=Factors)) + geom_bar(stat="identity") + facet_wrap(~Var2) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+PC3 <- melted %>% filter(Var2=="PC3") %>% ggplot(aes(x = reorder(Measure,-value),y = value, fill=Factors)) + geom_bar(stat="identity") + facet_wrap(~Var2) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+PC4 <- melted %>% filter(Var2=="PC4") %>% ggplot(aes(x = reorder(Measure,-value),y = value, fill=Factors)) + geom_bar(stat="identity") + facet_wrap(~Var2) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+
+
+```{r}
+PC1
+```
+For the first principal component, we see that there is positive loadings for several measures in the Social and Economic Environment factor. They include child poverty, children in single-parent households, and unemployment. This could perhaps be interpreted as growing up poor. Then, the next three heights weights come from adult obesity, STIs, and teen births. Could this be interpreted as risky or non-healthy behavior? The following highest weights are inadequate social support, physical inactivity, housing problems, violent crime, and injury deaths -- suggesting unsafe neighborhoods and poor social networks. Finally, the smallest positive weights come from being uninsured, preventable hospital stays, alcohol impaired driving deaths, rinking water violations, and adult smoking. There is a theme, again, of risky behaviors. THe financial aspect may be telling of the inability to account for risky contexts and behaviors. 
+
+For the negative weights, being above average in having adequate food, education, preventive behavior, having physicians within distance, exercise opportunities, all point to having better health. 
+
+We might name this context, resource-dependent risk behaviors?
+
+```{r}
+PC2
+```
+
+Access to providers, education, crime (?), exercise opportunities, housing issues, STIs, single-parent households, illustrate those who have access to resources but may live in urbn areas? Density of providers and access to things, but high crime, high rates of infection, and single parent house holds. The urban element? 
+
+```{r}
+PC3
+```
+
+Preventative care.
+
+```{r}
+PC4
+```
+Rural areas. 
+
+
+Weights are constructed with the percent of variance each PC accounts for divided by the total amount o variance the chosen PCs account for.
+
+$$
+\rho = \frac{0.2725}{0.54748}*Factor_1+\frac{0.1598}{0.54748}*Factor_2+\frac{0.06199}{0.54748}*Factor_3+\frac{0.05325}{0.54748}*Factor_3
+$$
+
+The weights are 0.319 for F1, 0.292 for F2, 0.115 for F3, and 0.097.
+
+
+##Do it all again for Kentucky
+
+```{r}
+varKY <- varKY %>% mutate_all(funs(ifelse(is.na(.), 0, .)))
+KY.pca <- prcomp(varKY,
+                 center = TRUE,
+                 scale. = TRUE) 
+summary(KY.pca)
+```
+
+
+
+```{r}
+loadings <- as.data.frame(KY.pca$rotation) #create a data frame of PCA loadings
+melted <-  melt(KY.pca$rotation[,1:4])
+
+melted <- full_join(melted, factornames, by = c("Var1"= "Measure_Abb"))
+
+```
+
+```{r}
+PC1 <- melted %>% filter(Var2=="PC1") %>% ggplot(aes(x = reorder(Measure,-value),y = value, fill=Factors)) + geom_bar(stat="identity") + facet_wrap(~Var2) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+PC2 <- melted %>% filter(Var2=="PC2") %>% ggplot(aes(x = reorder(Measure,-value),y = value, fill=Factors)) + geom_bar(stat="identity") + facet_wrap(~Var2) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+PC3 <- melted %>% filter(Var2=="PC3") %>% ggplot(aes(x = reorder(Measure,-value),y = value, fill=Factors)) + geom_bar(stat="identity") + facet_wrap(~Var2) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+PC4 <- melted %>% filter(Var2=="PC4") %>% ggplot(aes(x = reorder(Measure,-value),y = value, fill=Factors)) + geom_bar(stat="identity") + facet_wrap(~Var2) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r}
+PC1
+```
+```{r}
+PC2
+```
+
+```{r}
+PC3
+```
+
+```{r}
+PC4
+```
+
+$$
+\rho = \frac{0.2705}{0.5204}*Factor_1+\frac{0.1267}{0.5204}*Factor_2+\frac{0.06661}{0.5204}*Factor_3+\frac{0.0566}{0.5204}*Factor_3
+$$
+
+Weights are 0.520, 0.243, 0.128, 10.9.
+
+
