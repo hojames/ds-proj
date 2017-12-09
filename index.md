@@ -29,7 +29,7 @@ As we embarked on this project, we found that we weren't the only ones intereste
   - [Self harm data masking violence deaths](http://www.nytimes.com/2016/12/10/opinion/sunday/violence-and-division-on-chicagos-south-side.html)
   - Existence of garbage codes: useless codes and ambiguous death causes
 
-## Sources for Data Analysis:
+### Sources for Data Analysis:
 For this project, we used the following data sources (all open access!):  
   [US county health rankings](https://www.rwjf.org/en/how-we-work/grants-explorer/featured-programs/county-health-ranking-roadmap.html)  
   [US county-level mortality data](https://www.kaggle.com/IHME/us-countylevel-mortality)
@@ -41,8 +41,7 @@ Research Questions:
 1. Can we use PCA to understand the dominating factors that drive county-level mortality rates in the United States?
 2. Can applying PCA help to inform trends in mortality rates at the county level that can be used to tailor context-specific interventions?
 
-### Exploratory Analysis
-#### Life Expectancy Decline
+### Exploratory Analysis of Mortality Rates and Health Rankings:
 In order to get a better understanding of where the most serious decline in life expectancy from 2010 to 2014 is happening in the U.S., we used the below code to generate the list of counties with the largest decrease in life expectancy.
 
 ![Alt Text](/web_image/top10_change.jpg)
@@ -63,9 +62,9 @@ The above exploration caused us to want to look at the all cause mortality rates
 
 ![Alt Text](/web_image/all_cause_mort.jpg)
 
-This graph above shows that both West Virginia and Mississippi saw an increase in all cause mortality rates, which corroborates our findings in our life expectancy decline exploration. 
+This graph above shows that both West Virginia and Mississippi demonstrated an increase in all cause mortality rates, which corroborates our findings in our life expectancy decline exploration. 
 
-We did notice, however, that it is difficult to judge how these two states differ from the rest of the country. The y axis all cause mortality ranges from 980 - 1040, which is not a large gap contrary to what it looks like visually. We decided we needed a reference state to compare our two states to. We picked Hawaii, which had the largest life expectancy in 2014. 
+We did notice, however, that it is difficult to judge how these two states differ from the rest of the country. The y axis all cause mortality ranges from 980 - 1040, which is not a large gap contrary to what it looks like visually. We decided we needed a reference state to compare our two states to. We picked Hawaii, which had the highest life expectancy in 2014. 
 
 ![Alt Text](/web_image/all_cause_incHI.jpg)
 
@@ -75,7 +74,40 @@ Next, we wanted to see how life expectancy decline and the County Health Ranking
 -In Mississippi, Grenada County ranked 49th in 2011, and 51st in 2015 out of 55 counties in the state.
 -In West Virginia, Logan Country ranked 54th in 2013 and 51st in 2015 out of 82 counties in the state. 
 
-### Final Analysis
+### Principal Component Analysis
+We continue to study the determinants of declines in life expectancy in Mississippi and West Virginia through Principal Component Analysis. We faced a limitation due to missing data, but we were able to replace missing values with 0 (because we were using standardized z-scores, so 0 would be the mean).
+
+In Mississippi:
+
+![Alt Text](/web_image/ms_pca.jpg)  
+From our summary of PCA for health factors in Missisippi, we see that the first PC accounts for 27.25% of variance. If we wanted to use four components, like the four fous areas that the CHR currently uses, then we would account for 54.7% of total variance. We would need 8 PCs to get to 71%, 11 to get to 80%, and 16 to get to 90%. At 16 PCs, it would be very difficult to keep track of 16 domains for something like the County Health Rankings, and even at 8 it is still unwieldly. Perhaps we should focus on a smaller number of components, but consider what each component is trying to tell us and also try the 'rule of 1' when looking at a scree plot. 
+
+Let's look at the loadings on the first four PCs:
+![Alt Text](/web_image/ms_pc1.jpg)  
+
+For the first principal component, we see that there is positive loadings for several measures in the Social and Economic Environment factor. They include child poverty, children in single-parent households, and unemployment. This could perhaps be interpreted as growing up poor. Then, the next three heights weights come from adult obesity, STIs, and teen births. Could this be interpreted as risky or non-healthy behavior? The following highest weights are inadequate social support, physical inactivity, housing problems, violent crime, and injury deaths -- suggesting unsafe neighborhoods and poor social networks. Finally, the smallest positive weights come from being uninsured, preventable hospital stays, alcohol impaired driving deaths, rinking water violations, and adult smoking. There is a theme, again, of risky behaviors. THe financial aspect may be telling of the inability to account for risky contexts and behaviors. 
+
+For the negative weights, being above average in having adequate food, education, preventive behavior, having physicians within distance, exercise opportunities, all point to having better health. 
+
+We might name this context, resource-dependent risk behaviors?
+
+![Alt Text](/web_image/ms_pc2.jpg) 
+
+Access to providers, education, crime (?), exercise opportunities, housing issues, STIs, single-parent households, illustrate those who have access to resources but may live in urbn areas? Density of providers and access to things, but high crime, high rates of infection, and single parent house holds. The urban element? 
+
+![Alt Text](/web_image/ms_pc3.jpg) 
+
+Preventative care.
+
+![Alt Text](/web_image/ms_pc4.jpg) 
+
+Rural areas. 
+
+Weights are constructed with the percent of variance each PC accounts for divided by the total amount of variance the chosen PCs account for.
+
+![Alt Text](/web_image/weights_pc.jpg) 
+
+The weights are 0.319 for F1, 0.292 for F2, 0.115 for F3, and 0.097 for F4.
 
 ### Conclusions
 
