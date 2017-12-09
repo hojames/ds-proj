@@ -14,11 +14,8 @@ title: Understanding Recent Life Expectancy Declines in the United States throug
 ### Motivation
 We are interested in exploring domestic health policy through the lens of county-level health rankings, mortality data, and other relevant determinants of health. Across the United States, there is broad diversity and variation in health status, access to care, and health outcomes. 
 
-<<<<<<< HEAD
-=======
-![Alt Text](/US_LE_motivation.jpg)
+![Alt Text](/web_image/US_LE_motivation.jpg)
 
->>>>>>> 7c9aa9f84c46e99e5bcd8509d809d5454e9435a5
 We are curious about the decline of life expectancy in the US (for the first time since the 1990s), and which groups of people (by location, race, income level, or other factors) experienced different changes in mortality and by what cause of death. This analysis could provide insights that could guide targeted health interventions for specific communities in the US. 
 
 ### Related Work
@@ -45,6 +42,21 @@ Research Questions:
 2. Can applying PCA help to inform trends in mortality rates at the county level that can be used to tailor context-specific interventions?
 
 ### Exploratory Analysis
+
+#### Life Expectancy Decline
+In order to get a better understanding of where the most serious decline in life expectancy from 2010 to 2014 is happening in the U.S., we used the below code to generate the list of counties with the largest decrease in life expectancy.
+
+![Alt Text](/web_image/top10_change.jpg)
+
+While the above exploratory analysis is interesting, we decided that it would be more interesting to look at the states as a whole. There could be large outliers within each state with life expectancy and we didn't want our data to be skewed by such outliers. So, we asked the question, "which state had the largest decline in life expectancy during this same time period?"" 
+
+![Alt Text](/web_image/top10_state.jpg)
+
+From the above output, both Mississippi and West Virginia had the largest decline in life expectancy (-0.04 years) from 2010-2011. We decided to then do the rest of our analysis using these two states. 
+
+Going back to the county level, we wanted to check what the range of change in life expectancy was during this time period in each state. What percent of counties had a decline in life expectancy compared to an increase? 
+
+![Alt Text](/web_image/change_in_le.jpg)
 
 ### Final Analysis
 
