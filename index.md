@@ -1,6 +1,6 @@
 # Understanding Recent Life Expectancy Declines in the United States through Exploratory Data Analysis & Principal Component Analysis
 
-## Site Outline:
+## Project Site Outline:
 1. Overview (embed screencast here?)
 2. Related Work for Motivation/Inspiration (links to relevant articles)
 3. Initial Research Questions
@@ -9,7 +9,12 @@
 6. Final Analysis
 7. Summarizing Conclusions
 
-### Overview
+### Motivation
+We are interested in exploring domestic health policy through the lens of county-level health rankings, mortality data, and other relevant determinants of health. Across the United States, there is broad diversity and variation in health status, access to care, and health outcomes. 
+
+![Alt text](/US_LE_motivation.jpg)
+
+We are curious about the decline of life expectancy in the US (for the first time since the 1990s), and which groups of people (by location, race, income level, or other factors) experienced different changes in mortality and by what cause of death. This analysis could provide insights that could guide targeted health interventions for specific communities in the US. 
 
 ### Related Work
 As we embarked on this project, we found that we weren't the only ones interested in exploring disparities in life expectancy/determinants of health at the county level. Some previous work that helped to guide our project development is below:
@@ -21,7 +26,12 @@ As we embarked on this project, we found that we weren't the only ones intereste
   - [Self harm in Western states](https://fivethirtyeight.com/features/suicide-in-wyoming/)
   - [Self harm data masking violence deaths](http://www.nytimes.com/2016/12/10/opinion/sunday/violence-and-division-on-chicagos-south-side.html)
   - Existence of garbage codes: useless codes and ambiguous death causes
-  
+
+## Sources for Data Analysis:
+For this project, we used the following data sources (all open access!):  
+  [US county health rankings](https://www.rwjf.org/en/how-we-work/grants-explorer/featured-programs/county-health-ranking-roadmap.html)  
+  [US county-level mortality data](https://www.kaggle.com/IHME/us-countylevel-mortality)
+
 ### Project Development 
 
 ### Data Sources
@@ -43,28 +53,4 @@ Data: Source, scraping method, cleanup, etc.
 Exploratory Analysis: What visualizations did you use to look at your data in different ways? What are the different statistical methods you considered? Justify the decisions you made, and show any major changes to your ideas. How did you reach these conclusions?
 
 Final Analysis: What did you learn about the data? How did you answer the questions? How can you justify your answer
-
-You can use the [editor on GitHub](https://github.com/hojames/ds-proj/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
 
