@@ -1,2 +1,2 @@
-theme: jekyll-theme-tactile # keeping it simple for now, cannot get remote_theme below to work
+theme: jekyll-theme-cayman
 #remote_theme: poole/Hyde
