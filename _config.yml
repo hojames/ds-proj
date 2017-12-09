@@ -1,8 +1,10 @@
 # Name of your blog (this will show up at the top of your page and in the RSS feed)
 name: LE Declines in the US
 
+title: Understanding Recent Life Expectancy Declines in the United States
+
 # Short description (goes below the title; it will also be used in the RSS feed)
-description: Understanding Recent Life Expectancy Declines in the United States
+description: Using Exploratory Data Analysis & Principal Component Analysis 
 
 # Your name, as you want it to appear underneath each post and in the footer
 author: AE, EG, HOJ, SM
