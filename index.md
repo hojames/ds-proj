@@ -1,5 +1,5 @@
 ---
-layout: frontpage
+layout: page
 title: Understanding Recent Life Expectancy Declines in the United States through Exploratory Data Analysis & Principal Component Analysis
 author: AE, EG, HOJ, SM
 ---
@@ -44,7 +44,6 @@ Research Questions:
 2. Can applying PCA help to inform trends in mortality rates at the county level that can be used to tailor context-specific interventions?
 
 ### Exploratory Analysis
-
 
 ### Final Analysis
 
