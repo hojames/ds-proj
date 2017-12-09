@@ -14,7 +14,7 @@ title: Understanding Recent Life Expectancy Declines in the United States throug
 ### Motivation
 We are interested in exploring domestic health policy through the lens of county-level health rankings, mortality data, and other relevant determinants of health. Across the United States, there is broad diversity and variation in health status, access to care, and health outcomes. 
 
-![Alt Text](/US_LE_motivation.jpg)
+![Alt Text](web_images/US_LE_motivation.jpg)
 
 We are curious about the decline of life expectancy in the US (for the first time since the 1990s), and which groups of people (by location, race, income level, or other factors) experienced different changes in mortality and by what cause of death. This analysis could provide insights that could guide targeted health interventions for specific communities in the US. 
 
@@ -38,10 +38,21 @@ For this project, we used the following data sources (all open access!):
 We wanted to dive further into mortality and attempt to understand the factors that contribute to high mortality rates in certain counties. With this in mind, we were curious about performing [Principal Component Analysis (PCA) for mortality](https://academic.oup.com/heapol/article/21/6/459/612115). We found other literature where this method had been employed to understand [mortality in developing countries](https://www.ncbi.nlm.nih.gov/pubmed/12311007), [cardiovascular deaths among Native Americans](https://www.ncbi.nlm.nih.gov/pubmed/11839627), and [malaria cases in Ghana](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2914064/).
 
 Research Questions:
-1. Can we use PCA to understand the dominating factors that drive county-level mortality rates in the United States?
-2. Can applying PCA help to inform trends in mortality rates at the county level that can be used to tailor context-specific interventions?
+1. Can we use PCA to understand the dominating factors that drive mortality rates in the United States?
+2. Can applying PCA help to inform trends in mortality rates that can be used to tailor context-specific interventions?
 
 ### Exploratory Analysis
+
+#### Life Expectancy Decline
+We began our exploration of the data by generating a list of counties with the largest decline in life expectancy from 2010 to 2014 (the range of years that we will focus on going forward). This was interesting, but not tremendously informative for illucidating other trends that we may want to explore. 
+
+![Alt Text](web_images/top10_change.jpg)
+
+We decided that it would be more interesting to consider states as whole, and agreggate some of the county-level information. There could be large outliers within each state with life expectancy and we didn't want our data to be skewed by such outliers. So, we asked the question, "which state had the largest decline in life expectancy during this same time period?"
+
+![Alt Text](web_images/top10_state.jpg)
+
+From the above output, both Mississippi and West Virginia had the largest decline in life expectancy (-0.04 years) from 2010-2011. We decided to then do the rest of our analysis using these two states. 
 
 ### Final Analysis
 
