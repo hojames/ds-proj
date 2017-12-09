@@ -1,7 +1,7 @@
-## Understanding Recent Life Expectancy Declines in the United States through Exploratory Data Analysis & Principal Component Analysis
+# Understanding Recent Life Expectancy Declines in the United States through Exploratory Data Analysis & Principal Component Analysis
 
-# Site Outline:
-1. Overview (embed screencast?)
+## Site Outline:
+1. Overview (embed screencast here?)
 2. Related Work for Motivation/Inspiration (links to relevant articles)
 3. Initial Research Questions
 4. Data
@@ -9,6 +9,28 @@
 6. Final Analysis
 7. Summarizing Conclusions
 
+### Overview
+
+### Related Work
+As we embarked on this project, we found that we weren't the only ones interested in exploring disparities in life expectancy/determinants of health at the county level. Some previous work that helped to guide our project development is below:
+- [35 Years of Death, via 538](https://projects.fivethirtyeight.com/mortality-rates-united-states/)
+- [Article Summarizing New Findings, via 538](https://fivethirtyeight.com/features/how-americans-die-may-depend-on-where-they-live/)
+  - Cardiovascular disease strongly impacts health in Appalachia and Southern regions of United States
+  - [Death rates are rising for middle age whites](https://www.nytimes.com/2015/11/03/health/death-rates-rising-for-middle-aged-white-americans-study-finds.html)
+  - [Increased vehicle deaths in rural areas/longer distances to ERs](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1448517/)
+  - [Self harm in Western states](https://fivethirtyeight.com/features/suicide-in-wyoming/)
+  - [Self harm data masking violence deaths](http://www.nytimes.com/2016/12/10/opinion/sunday/violence-and-division-on-chicagos-south-side.html)
+  - Existence of garbage codes: useless codes and ambiguous death causes
+  
+### Project Development 
+
+### Data Sources
+
+### Exploratory Analysis
+
+### Final Analysis
+
+### Conclusions
 
 Overview and Motivation: Provide an overview of the project goals and the motivation for it. Consider that this will be read by people who did not see your project proposal.
 
