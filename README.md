@@ -5,16 +5,11 @@ We are interested in exploring domestic health policy through the lens of county
 
 ## Data Sources:
 [US county health rankings](https://www.rwjf.org/en/how-we-work/grants-explorer/featured-programs/county-health-ranking-roadmap.html)
+
 [US county-level mortality data](https://www.kaggle.com/IHME/us-countylevel-mortality)
 
-## Testing Relative Links to Content
+## Links to Content
 [Exploratory Data Analysis](master/alex_exploratory.Rmd/)
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
-### Prerequisites
-
-What things you need to install the software and how to install them
 
 ```
 Give examples
