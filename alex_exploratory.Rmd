@@ -15,6 +15,7 @@ library(dplyr)
 library(tidyverse)
 library(ggthemes)
 library(gridExtra)
+library(knitr)
 load(file = "finalLE.rda")
 load(file = "AllMortality.rda")
 load(file = "Predictors_1.rda")
@@ -30,6 +31,10 @@ In order to get a better understanding of where the most serious decline in life
 ind <- order(ledata$change) 
 ledata$county[ind] 
 ledata$change[ind]
+
+ledata %>% 
+        arrange(change) %>% 
+        select(state, county, change)
 ```
 
 While the above exploratory analysis is interesting, we decided that it would be more interesting to look at the states as a whole. There could be large outliers within each state with life expectancy and we didn't want our data to be skewed by such outliers. So, we asked the question, "which state had the largest decline in life expectancy during this same time period?"" 
@@ -49,6 +54,10 @@ lestate <- lestate[!grepl("City", lestate$county),]
 ind <- order(lestate$change) 
 lestate$state[ind] 
 lestate$change[ind]
+
+lestate %>% 
+        arrange(change) %>% 
+        select(state) %>% kable()
 ```
 
 From the above output, both Mississippi and West Virginia had the largest decline in life expectancy (-0.04 years) from 2010-2011. We decided to then do the rest of our analysis using these two states. 
