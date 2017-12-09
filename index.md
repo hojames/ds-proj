@@ -1,7 +1,5 @@
 ---
-layout: frontpage
 title: Understanding Recent Life Expectancy Declines in the United States through Exploratory Data Analysis & Principal Component Analysis
-author: AE, EG, HOJ, SM
 ---
 
 ## Project Site Outline:
