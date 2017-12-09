@@ -42,7 +42,6 @@ Research Questions:
 2. Can applying PCA help to inform trends in mortality rates at the county level that can be used to tailor context-specific interventions?
 
 ### Exploratory Analysis
-
 #### Life Expectancy Decline
 In order to get a better understanding of where the most serious decline in life expectancy from 2010 to 2014 is happening in the U.S., we used the below code to generate the list of counties with the largest decrease in life expectancy.
 
@@ -58,19 +57,25 @@ Going back to the county level, we wanted to check what the range of change in l
 
 ![Alt Text](/web_image/change_in_le.jpg)
 
+We can see from the graphs above that there were quite a few counties that had a decline in life expectancy. There were exactly 55 out of 82 counties in Mississippi that had negative changes in life expectancy. There were exactly 34 out of 55 counties in West Virginia that had negative changes in life expectancy. 
+
+The above exploration caused us to want to look at the all cause mortality rates in these two states. We assume that with a decline in life expectancy that we would see an increase in cause mortality.  
+
+![Alt Text](/web_image/all_cause_mort.jpg)
+
+This graph above shows that both West Virginia and Mississippi saw an increase in all cause mortality rates, which corroborates our findings in our life expectancy decline exploration. 
+
+We did notice, however, that it is difficult to judge how these two states differ from the rest of the country. The y axis all cause mortality ranges from 980 - 1040, which is not a large gap contrary to what it looks like visually. We decided we needed a reference state to compare our two states to. We picked Hawaii, which had the largest life expectancy in 2014. 
+
+![Alt Text](/web_image/all_cause_incHI.jpg)
+
+We can now see that West Virginia and Mississippi had very similar trends in all cause mortality rates and that Hawaii, the state with the highest life expectancy, had a much lower all cause mortality rates throughout the five years of data. It is important in these types of graphs to have a reference category to compare to in order not to draw false inferences. 
+
+Next, we wanted to see how life expectancy decline and the County Health Rankings (CHR) compared to each other. How did the county with the largest decrease in life expectancy fare in CHR?  
+-In Mississippi, Grenada County ranked 49th in 2011, and 51st in 2015 out of 55 counties in the state.
+-In West Virginia, Logan Country ranked 54th in 2013 and 51st in 2015 out of 82 counties in the state. 
+
 ### Final Analysis
 
 ### Conclusions
-
-Overview and Motivation: Provide an overview of the project goals and the motivation for it. Consider that this will be read by people who did not see your project proposal.
-
-Related Work: Anything that inspired you, such as a paper, a web site, or something we discussed in class.
-
-Initial Questions: What questions are you trying to answer? How did these questions evolve over the course of the project? What new questions did you consider in the course of your analysis?
-
-Data: Source, scraping method, cleanup, etc.
-
-Exploratory Analysis: What visualizations did you use to look at your data in different ways? What are the different statistical methods you considered? Justify the decisions you made, and show any major changes to your ideas. How did you reach these conclusions?
-
-Final Analysis: What did you learn about the data? How did you answer the questions? How can you justify your answer
 
