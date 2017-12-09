@@ -1,4 +1,6 @@
-# Understanding Recent Life Expectancy Declines in the United States through Exploratory Data Analysis & Principal Component Analysis
+---
+title: Understanding Recent Life Expectancy Declines in the United States through Exploratory Data Analysis & Principal Component Analysis
+---
 
 ## Project Site Outline:
 1. Overview (embed screencast here?)
@@ -32,11 +34,15 @@ For this project, we used the following data sources (all open access!):
   [US county health rankings](https://www.rwjf.org/en/how-we-work/grants-explorer/featured-programs/county-health-ranking-roadmap.html)  
   [US county-level mortality data](https://www.kaggle.com/IHME/us-countylevel-mortality)
 
-### Project Development 
+### Project Development
+We wanted to dive further into mortality and attempt to understand the factors that contribute to high mortality rates in certain counties. With this in mind, we were curious about performing [Principal Component Analysis (PCA) for mortality](https://academic.oup.com/heapol/article/21/6/459/612115). We found other literature where this method had been employed to understand [mortality in developing countries](https://www.ncbi.nlm.nih.gov/pubmed/12311007), [cardiovascular deaths among Native Americans](https://www.ncbi.nlm.nih.gov/pubmed/11839627), and [malaria cases in Ghana](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2914064/).
 
-### Data Sources
+Research Questions:
+1. Can we use PCA to understand the dominating factors that drive county-level mortality rates in the United States?
+2. Can applying PCA help to inform trends in mortality rates at the county level that can be used to tailor context-specific interventions?
 
 ### Exploratory Analysis
+
 
 ### Final Analysis
 
