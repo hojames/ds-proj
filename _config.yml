@@ -7,6 +7,12 @@ description: Understanding Recent Life Expectancy Declines in the United States
 # Your name, as you want it to appear underneath each post and in the footer
 author: AE, EG, HOJ, SM
 
+repository: hojames/ds-proj
+
+head_scripts:
+  - https://code.jquery.com/jquery-3.2.1.min.js
+  - /assets/js/your-custom-head-script.js
+
 # Your email if you want it to be linked on the contact page
 # author_email: you@example.com
 
