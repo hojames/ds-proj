@@ -1,0 +1,93 @@
+---
+title: "Demo_datacleaning_SM"
+author: "SM"
+date: "November 25, 2017"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+setwd("C:/Users/Sohini Mukherjee/OneDrive/Documents/Harvard University/Academic/Fall 2017/BST 260 - Data Science I/Final Project/ACS/Race")
+getwd()
+```
+Uploading Race data
+```{r}
+Race_2010 <- read.csv("ACS_2010_Race.csv")
+Race_2011 <- read.csv("ACS_2011_Race.csv")
+Race_2012 <- read.csv("ACS_2012_Race.csv")
+Race_2013 <- read.csv("ACS_2013_Race.csv")
+Race_2014 <- read.csv("ACS_2014_Race.csv")
+Race_2015 <- read.csv("ACS_2015_Race.csv")
+Race_2016 <- read.csv("ACS_2016_Race.csv")
+```
+Delete columns
+```{r}
+Race_2010 <- Race_2010[, -c(1)]
+```
+
+Add year
+```{r}
+Race_2010$year <- NA
+Race_2010$year <- 2010
+Race_2010 <- Race_2010[,c(1,2,9,3:8)]
+
+Race_2011$year <- NA
+Race_2011$year <- 2011
+Race_2011 <- Race_2011[,c(1,2,9,3:8)]
+
+Race_2012$year <- NA
+Race_2012$year <- 2012
+Race_2012 <- Race_2012[,c(1,2,9,3:8)]
+
+Race_2013$year <- NA
+Race_2013$year <- 2013
+Race_2013 <- Race_2013[,c(1,2,9,3:8)]
+
+Race_2014$year <- NA
+Race_2014$year <- 2014
+Race_2014 <- Race_2014[,c(1,2,9,3:8)]
+
+Race_2015$year <- NA
+Race_2015$year <- 2015
+Race_2015 <- Race_2015[,c(1,2,9,3:8)]
+
+Race_2016$year <- NA
+Race_2016$year <- 2016
+Race_2016 <- Race_2016[,c(1,2,9,3:8)]
+```
+
+Initial binding rows
+```{r}
+Race <- bind_rows(Race_2010,Race_2011,Race_2012,Race_2013,Race_2014,Race_2015,Race_2016)
+```
+
+Check naming inconsistencies
+```{r}
+str(Race)
+```
+Delete Race
+```{r}
+rm(Race)
+```
+Rename Geography in Race_2015
+```{r}
+names(Race_2015)[names(Race_2015) == 'Geography'] <- 'County_State'
+```
+
+Binding rows
+```{r}
+Race <- bind_rows(Race_2010,Race_2011,Race_2012,Race_2013,Race_2014,Race_2015,Race_2016)
+str(Race)
+```
+
+Save data
+```{r}
+setwd("C:/Users/Sohini Mukherjee/OneDrive/Documents/Harvard University/Academic/Fall 2017/BST 260 - Data Science I/DS-Proj_Save_SM")
+save(Race, file="Race.Rda")
+```
+

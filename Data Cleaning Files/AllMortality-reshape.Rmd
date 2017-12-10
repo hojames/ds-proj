@@ -1,0 +1,32 @@
+---
+title: "Untitled"
+author: "SM"
+date: "November 25, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(reshape2)
+```
+
+
+```{r}
+unique(AllMortality$cause_name)
+str((AllMortality))
+```
+
+```{r}
+AllMort_reshape <- filter(AllMortality, sex=="Both")
+AllMort_reshape <- select(AllMort_reshape, location_id, location_name, FIPS, cause_id, cause_name, year_id, mx)
+
+```
+
+
+```{r}
+AllMort_reshape2 <- spread(AllMort_reshape, year_id, mx)
+```
+
