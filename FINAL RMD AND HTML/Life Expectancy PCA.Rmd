@@ -37,7 +37,7 @@ For this project, we used the following data sources (all open access!):
 ```{r}
 library(reshape2)
 library(rio)
-load(Mortality.csv)
+
 AllMortality <- import("Mortality.csv")
 
 unique(AllMortality$cause_name)
@@ -47,6 +47,9 @@ AllMort_reshape <- filter(AllMortality, sex=="Both")
 AllMort_reshape <- select(AllMort_reshape, location_id, location_name, FIPS, cause_id, cause_name, year_id, mx)
 
 AllMort_reshape2 <- spread(AllMort_reshape, year_id, mx)
+
+save(AllMortality, file="AllMortality.rda"")
+
 ```
 
 ####Cleaning and Reshaping Predictors Data from CHR
