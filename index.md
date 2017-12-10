@@ -14,7 +14,7 @@ title: Understanding Recent Life Expectancy Declines in the United States throug
 ### Motivation
 We are interested in exploring domestic health policy through the lens of county-level health rankings, mortality data, and other relevant determinants of health. Across the United States, there is broad diversity and variation in health status, access to care, and health outcomes. 
 
-![Alt Text](/web_image/US_LE_motivation.jpg)
+<img src="/web_image/US_LE_motivation.jpg" alt="LE_motivation" width="533" height="618"/>
 
 We are curious about the decline of life expectancy in the US (for the first time since the 1990s), and which groups of people (by location, race, income level, or other factors) experienced different changes in mortality and by what cause of death. This analysis could provide insights that could guide targeted health interventions for specific communities in the US. 
 
@@ -42,47 +42,50 @@ Research Questions:
 2. Can applying PCA help to inform trends in mortality rates at the county level that can be used to tailor context-specific interventions?
 
 ### Exploratory Analysis of Mortality Rates and Health Rankings:
-In order to get a better understanding of where the most serious decline in life expectancy from 2010 to 2014 is happening in the U.S., we used the below code to generate the list of counties with the largest decrease in life expectancy.
+*Counties & States Demonstrating Declines in Life Expectancy*  
+We began by generating a list of counties with the largest decrease in life expectancy. We were seeking more information about exactly which areas in the U.S. had demonstrated the most dramatic decline in life expectancy from 2010 to 2014:
 
 ![Alt Text](/web_image/top10_change.jpg)
 
-While the above exploratory analysis is interesting, we decided that it would be more interesting to look at the states as a whole. There could be large outliers within each state with life expectancy and we didn't want our data to be skewed by such outliers. So, we asked the question, "which state had the largest decline in life expectancy during this same time period?"" 
+Early exploration at the county level is interesting, but for some additional analysis we want to consider each state as an individual unit of analysis. We know that there is a strong likelihood of individual outliers at the county-level that might skew our results, and considering policy implications at the state-level, we asked the question, "which state had the largest decline in life expectancy during this same time period?"
 
 ![Alt Text](/web_image/top10_state.jpg)
 
-From the above output, both Mississippi and West Virginia had the largest decline in life expectancy (-0.04 years) from 2010-2011. We decided to then do the rest of our analysis using these two states. 
-
-Going back to the county level, we wanted to check what the range of change in life expectancy was during this time period in each state. What percent of counties had a decline in life expectancy compared to an increase? 
+Both Mississippi and West Virginia demonstrate the largest declines in life expectancy (-0.04 years) from 2010-2011. We decided continue analyzing these two states for a more in-depth understanding of these declines. Now that we are limiting our data to Mississippi and West Virginia, we can refine our unit of analysis and return to the county level. We were curious about the range of change in life expectancy during this time period in each state. What percent of counties had a decline in life expectancy compared to an increase? 
 
 ![Alt Text](/web_image/change_in_le.jpg)
 
-We can see from the graphs above that there were quite a few counties that had a decline in life expectancy. There were exactly 55 out of 82 counties in Mississippi that had negative changes in life expectancy. There were exactly 34 out of 55 counties in West Virginia that had negative changes in life expectancy. 
+We can see from the graphs above that there were quite a few counties that had a decline in life expectancy. There were exactly *55 out of 82 counties in Mississippi*, and *34 out of 55 counties in West Virginia* that demonstrated decrease in life expectancy from 2010-2014. 
 
+*What about all-cause mortality?*  
 The above exploration caused us to want to look at the all cause mortality rates in these two states. We assume that with a decline in life expectancy that we would see an increase in cause mortality.  
 
 ![Alt Text](/web_image/all_cause_mort.jpg)
 
 This graph above shows that both West Virginia and Mississippi demonstrated an increase in all cause mortality rates, which corroborates our findings in our life expectancy decline exploration. 
 
-We did notice, however, that it is difficult to judge how these two states differ from the rest of the country. The y axis all cause mortality ranges from 980 - 1040, which is not a large gap contrary to what it looks like visually. We decided we needed a reference state to compare our two states to. We picked Hawaii, which had the highest life expectancy in 2014. 
+*Including a "Healthy" Reference State: Hawaii*  
+We did notice, however, that it is difficult to determine from these exploratory analysis how these two states compare from the rest of the country. The y axis all cause mortality ranges from 980 - 1040, which is not a large gap contrary to what it looks like visually. We decided we needed a reference state to compare our two states to. We chose Hawaii to serve as a reference state, which had the highest life expectancy in 2014, and included it in our explorations below. 
 
 ![Alt Text](/web_image/all_cause_incHI.jpg)
 
-We can now see that West Virginia and Mississippi had very similar trends in all cause mortality rates and that Hawaii, the state with the highest life expectancy, had a much lower all cause mortality rates throughout the five years of data. It is important in these types of graphs to have a reference category to compare to in order not to draw false inferences. 
+We can now see that West Virginia and Mississippi had very similar trends in all cause mortality rates and that Hawaii, the state with the highest life expectancy, had a much lower all cause mortality rates throughout the five years of data. It is important in these types of graphs to have a reference category to compare to in order avoid making false inferences. 
 
-Next, we wanted to see how life expectancy decline and the County Health Rankings (CHR) compared to each other. How did the county with the largest decrease in life expectancy fare in CHR?  
+*Comparing Life Expectancy Decline and County Health Rankings*  
+How did the county with the largest decrease in life expectancy (in each state) fare in terms of its county health ranking?  
 -In Mississippi, Grenada County ranked 49th in 2011, and 51st in 2015 out of 55 counties in the state.
 -In West Virginia, Logan Country ranked 54th in 2013 and 51st in 2015 out of 82 counties in the state. 
 
 ### Principal Component Analysis
-Now that we know the two states with the greatest decline in life expectancy are Mississippi and West Virginia, let’s explore what explains the variation among the counties in those states. We know how [County Health Rankings](http://www.countyhealthrankings.org/our-approach) approach the 29 health measures, where they group them into four categories and weight them: Health Behaviors (30%), Clinical Care (20%), Social and Economic Factors (40%), and Physical Environment (10%).
+*CHR Methodology Informing Further Analysis*  
+Now that we know the two states with the greatest decline in life expectancy are Mississippi and West Virginia, let’s explore what explains the variation among the counties in those states. We know how [County Health Rankings](http://www.countyhealthrankings.org/our-approach) approach the 29 health measures, where they group them into four categories and weight them using the following: Health Behaviors (30%), Clinical Care (20%), Social and Economic Factors (40%), and Physical Environment (10%).
 
 We want to see if these group classifications and their weights hold up in explaining the declining life expectancy (and presumably poorer health) in Mississippi and West Virginia. Using PCA, if the 29 measures cluster differently than CHR’s four health factor categories, what kind of story does that tell us? What are shared county characteristics and how might they affect health? How can organizations like CHR take this story into account when computing future rankings, or how can states using information from PCA to address their less healthy residents?
 
 We began by creating a data frame of ONLY z-scores for the 29 variables, for Misssissippi and West Virginia, separately.
 
 #### In Mississippi:
-When we try to use prcomp on variables in Mississippi, we get an error since there are missing values. There are 91 missing values across the 82 counties for MS. We could delete rows with missing data, but then we would lose half of our counties. Instead, we can fill in the missing values with 0s, or the mean. With NAs replaced with 0s, we can try PCA again.
+When we try to use `prcomp` on variables in Mississippi, we get an error since there are missing values. There are 91 missing values across the 82 counties for MS. We could delete rows with missing data, but then we would lose half of our counties. Instead, we can fill in the missing values with 0s, or the mean. With NAs replaced with 0s, we can try PCA again.
 
 ![Alt Text](/web_image/ms_pca.jpg)  
 
@@ -118,12 +121,9 @@ These four PCs can be assigned weights calculated by the percent of variance eac
 
 The four PCs are the following: 
 - 49.8% Resource-poor Home Environments 
-
 - 29.2% Density of Services 
-
 - 11.3% Uninsured 
-
-- 9.7% No Outdoor Access
+- 9.7% No Outdoor Access  
 
 Interestingly for Mississippi, county scores on what CHR considers health measures actually fall into categories of home environemnts, access to providers, insurance, and outdoor activities. Our Principal Component Analaysis that being ‘healthy’ has a lot less to do with whether counties participate in healthy behaviors, but whether there are opportunities for individuals to grow up in healthy environments and seek affordable healthcare when they need it.
 
@@ -155,12 +155,9 @@ Finally, PC4 describes air pollution (similar to to Missisippi), as well as low 
 
 The four PCs for West Virginia are the following: 
 - 49.3% Health Engagement 
-
 - 22.8% Unstable Home Environment 
-
 - 15.6% Toxic Consumption 
-
-- 12.2% Occupational Health
+- 12.2% Occupational Health  
 
 ### County Health Rankings vs. Principal Component Analysis
 
@@ -174,6 +171,6 @@ For example, our components determined for PCA in Mississippi described the impo
 
 Implications for our principal component analyses include focusing on the built and physical environments of communities Improving housing, environmental conditions, and ensuring access (geographically and financially) to health services, are likely to impact communites more than addressing specific health factors like STIs or monitoring diabetes. This contrasts from the implications of CHR’s weights, where physical environment and clinical care are thought to be different from social/economic factors and health behaviors.
 
-### What next?
+### What's next?
 With our PCA analyses, we were able to describe new patterns of health determinants and behaviors that differed from how CHR perceives health. CHR states that their mission in creating these rankings is to provide states with information about where and how to focus their energies in improving population health. We hope that a different approach to these rankings using PCA point to other patterns in population health, and encourage a more holistic, social welfare approach to improving health. PCA tells us that what are traditionally ‘health measures’ actually describe social well being as well, which should be a focus in public health efforts.
 
