@@ -86,7 +86,7 @@ When we try to use prcomp on variables in Mississippi, we get an error since the
 
 ![Alt Text](/web_image/ms_pca.jpg)  
 
-From our summary of PCA for health factors in Missisippi, we see that the first PC accounts for 27.25% of variance. If we wanted to use four components, like the four fous areas that the CHR currently uses, then we would account for 54.7% of total variance. We would need 8 PCs to get to 71%, 11 to get to 80%, and 16 to get to 90%. At 16 PCs, it would be very difficult to keep track of 16 domains for something like the County Health Rankings, and even at 8 it is still unwieldly. Perhaps we should focus on a smaller number of components, but consider what each component is trying to tell us and also try the ‘rule of 1’ and looking at the ‘elbow’ of a scree plot.
+From our summary of PCA for health factors in Missisippi, we see that the first PC accounts for 27.25% of variance. If we wanted to use four components, like the four focus areas that the CHR currently uses, then we would account for 54.7% of total variance. We would need 8 PCs to get to 71%, 11 to get to 80%, and 16 to get to 90%. At 16 PCs, it would be very difficult to keep track of 16 domains for something like the County Health Rankings, and even at 8 it is still unwieldly. Perhaps we should focus on a smaller number of components, but consider what each component is trying to tell us and also try the ‘rule of 1’ and looking at the ‘elbow’ of a scree plot.
 
 The rule of 1, or retaining eigenvalues of 1 or more, would lead us to choosing seven principal components. Looking at the scree plot below, we would choose four principal components, since it appears that the variance levels off after four components.
 
@@ -116,7 +116,14 @@ These four PCs can be assigned weights calculated by the percent of variance eac
 
 ![Alt Text](/web_image/ms_fac_weights.jpg) 
 
-The four PCs are the following: * 49.8% Resource-poor Home Environments * 29.2% Density of Services * 11.3% Uninsured * 9.7% No Outdoor Access
+The four PCs are the following: 
+- 49.8% Resource-poor Home Environments 
+
+- 29.2% Density of Services 
+
+- 11.3% Uninsured 
+
+- 9.7% No Outdoor Access
 
 Interestingly for Mississippi, county scores on what CHR considers health measures actually fall into categories of home environemnts, access to providers, insurance, and outdoor activities. Our Principal Component Analaysis that being ‘healthy’ has a lot less to do with whether counties participate in healthy behaviors, but whether there are opportunities for individuals to grow up in healthy environments and seek affordable healthcare when they need it.
 
@@ -146,7 +153,14 @@ Finally, PC4 describes air pollution (similar to to Missisippi), as well as low 
 
 ![Alt Text](/web_image/wv_fac_weights.jpg)
 
-The four PCs for West Virginia are the following: * 49.3% Health Engagement * 22.8% Unstable Home Environment * 15.6% Toxic Consumption * 12.2% Occupational Health
+The four PCs for West Virginia are the following: 
+- 49.3% Health Engagement 
+
+- 22.8% Unstable Home Environment 
+
+- 15.6% Toxic Consumption 
+
+- 12.2% Occupational Health
 
 ### County Health Rankings vs. Principal Component Analysis
 
