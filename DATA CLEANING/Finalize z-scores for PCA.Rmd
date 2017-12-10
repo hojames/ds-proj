@@ -1,0 +1,42 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Finalize z-scores for performing PCA for Mississippi and West Virginia
+
+```{r}
+
+zscores <- RWJFMeasures_2014[c(1:4,22:49)] #subset health factor variables only
+names(zscores) # we are missing alcohol driving deaths!
+
+library(readxl) #download from CHR
+alcoholdeaths <- read_excel("~/Documents/Fall2017/BST260/FinalProject/ds-proj/DATA CLEANING/RAW DATA/alcoholdeaths.xlsx",
+    col_types = c("numeric", "text", "text",
+        "numeric"))
+View(alcoholdeaths)
+
+alcoholdeaths$alc_drivingdeath <- ave(alcoholdeaths$alc_drivingdeath, alcoholdeaths$State, FUN=scale) #zscore
+zscores <- left_join(zscores,alcoholdeaths, by = c("FIPS"="FIPS","State"="State","County"="County")) #join to main data set
+
+```
+
+Filter to needed states
+```{r}
+
+zMS_WV <- zscores %>% filter(State== "Mississippi" | State == "West Virginia") # two states with declinine LE
+
+save(zMS_WV, file="Z-scores_MS_WV")
+
+```
+
+Load data frame of factor names to merge during PCA
+
+```{r}
+factornames<- read_excel("~/Documents/Fall2017/BST260/FinalProject/ds-proj/DATA CLEANING/RAW DATA/factornames.xlsx", 
+    col_types = c("text","text","text"))
+
+save(factornames, file="factornames")
+
+```
+
