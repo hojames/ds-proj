@@ -1,0 +1,49 @@
+---
+title: "Exploratory Data Analysis"
+output: html_notebook
+---
+
+Packages
+```{r}
+library(stringr)
+library(noncensus)
+library(tidyverse)
+library(dslabs)
+library(ggplot2)
+library(dplyr)
+library(ggthemes)
+library(ggrepel)
+library(RColorBrewer)
+```
+
+Files
+```{r}
+load("~/Documents/Fall2017/BST260/FinalProject/ds-proj/clean_data/state_mortality-EG.Rda")
+load("~/Documents/Fall2017/BST260/FinalProject/ds-proj/clean_data/IV_Race_Age-EG.Rda")
+load("~/Documents/Fall2017/BST260/FinalProject/ds-proj/clean_data/county_mortality-EG.Rda")
+```
+
+
+EXPLORATORY ANALYSIS 
+```{r}
+state_mortality %>% filter(cause_name == "All causes", sex=="Both") %>% group_by(state) %>% 
+  ggplot() + 
+  geom_line(aes(year_id,mx, col=state))
+```
+
+```{r}
+causes <- state_mortality %>% group_by(state, sex, year_id, mx,cause_name) %>% summarize(mean = mean(mx)) #%>% select(cause_name == "Self-harm and interpersonal violence")# %>% filter(sex=="Both") %>%
+  ggplot() + 
+  geom_line(aes(year_id,mx, col=cause_name))
+
+causes
+```
+
+
+
+
+
+
+
+
+

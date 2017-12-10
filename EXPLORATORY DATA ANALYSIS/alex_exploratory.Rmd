@@ -1,0 +1,163 @@
+---
+title: "exploratory_Alex"
+author: "alex"
+date: "11/29/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+library(ggthemes)
+library(gridExtra)
+load(file = "finalLE.rda")
+load(file = "AllMortality.rda")
+load(file = "Predictors_1.rda")
+```
+
+## Life Expectancy Decline
+
+In order to get a better understanding of where the most serious decline in life expectancy from 2010 to 2014 is happening in the U.S., we used the below code to generate the list of counties with the largest decrease in life expectancy. 
+
+
+```{r}
+#Order of counties with the largest decreased LE (from 2010 - 2014)
+ind <- order(ledata$change) 
+ledata$county[ind] 
+ledata$change[ind]
+```
+
+While the above exploratory analysis is interesting, we decided that it would be more interesting to look at the states as a whole. There could be large outliers within each state with life expectancy and we didn't want our data to be skewed by such outliers. So, we asked the question, "which state had the largest decline in life expectancy during this same time period?"" 
+
+```{r}
+#Create dataframe with only state avg
+lestate <- ledata[!grepl("County", ledata$county),]
+lestate <- lestate[!grepl("Area", lestate$county),]
+lestate <- lestate[!grepl("Municipality", lestate$county),]
+lestate <- lestate[!grepl("Borough", lestate$county),]
+lestate <- lestate[!grepl("Parish", lestate$county),]
+lestate <- lestate[!grepl("City", lestate$county),]
+```
+
+```{r}
+#Order of states with the largest decreased LE (from 2010 - 2014)
+ind <- order(lestate$change) 
+lestate$state[ind] 
+lestate$change[ind]
+```
+
+From the above output, both Mississippi and West Virginia had the largest decline in life expectancy (-0.04 years) from 2010-2011. We decided to then do the rest of our analysis using these two states. 
+
+Going back to the county level, we wanted to check what the range of change in life expectancy was during this time period in each state. What percent of counties had a decline in life expectancy compared to an increase? 
+
+```{r}
+# Graph of change in le (from 2010-2014) in each county in Mississippi and West Virginia 
+mle <- ledata %>% mutate(rn = row_number()) %>% filter(rn <= 1509, rn >= 1427)
+wvle <- ledata %>% mutate(rn = row_number()) %>% filter(rn <= 3097, rn >= 3042)
+
+P1 <- ggplot(data = mle, aes(x = reorder(county, -change), y = change)) +
+  geom_boxplot() +
+  geom_hline(yintercept = 0, col = "red") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  scale_y_continuous(limits = c(-0.5, 0.5)) +
+  xlab("Counties") +
+  ylab("Change in LE") +
+  ggtitle("Change in Life Expectancy from 2010 - 2014 across Mississippi Counties") +
+   theme(legend.position = "none",
+        axis.text.x=element_blank()) 
+
+G1 <- ggplot(data = wvle, aes(x = reorder(county, -change), y = change)) +
+  geom_boxplot() +
+  geom_hline(yintercept = 0, col = "red") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  scale_y_continuous(limits = c(-0.5, 0.5)) +
+  ylab("Change in LE") +
+  xlab("Counties") +
+  ggtitle("Change in Life Expectancy from 2010 - 2014 across West Virginia Counties") +
+  theme(legend.position = "none",
+        axis.text.x=element_blank()) 
+grid.arrange(P1, G1)
+```
+
+We can see from the graphs above that there were quite a few counties that had a decline in life expectancy. How many exactly were there?
+```{r}
+# How many counties had negative change in LE
+sum(mle$change < 0) #55 out of 82 counties have negative changes in LE in Mississippi
+sum(wvle$change <0) #34 out of 55 counties have negative changes in LE in West Virginia
+```
+
+The above exploration caused us to want to look at the all cause mortality rates in these two states. We assume that with a decline in life expectancy that we would see an increase in cause mortality.  
+
+```{r}
+# All Cause Mortality in Mississippii and West Virginia
+States <- c("Mississippi", "West Virginia")
+label <- data.frame(location_name = States, x = c(2013,2012), y = c(1025,992))
+two <- AllMortality %>% filter(location_name %in% c("Mississippi", "West Virginia"))
+two2 <- filter(two, cause_id == 294, sex_id == 3) 
+p1 <-  ggplot(data = two2, aes(year_id, mx, col = location_name)) 
+p1 +  geom_line() +
+   geom_text(data = label, aes(x, y, label = States), size = 5) +
+  ggtitle("All Cause Mortality from 2010 - 2014") +
+  ylab("All Cause Mortality Rates (Per 100,000)") +
+  xlab("Year") +
+   theme(legend.position = "none")
+```
+
+This graph above shows that both West Virginia and Mississippi saw an increase in all cause mortality rates, which corroborates our findings in our life expectancy decline exploration. 
+
+We did notice, however, that it is difficult to judge how these two states differ from the rest of the country. The y axis all cause mortality ranges from 980 - 1040, which is not a large gap contrary to what it looks like visually. We decided we needed a reference state to compare our two states to. We picked Hawaii, which had the largest life expectancy in 2014. 
+
+```{r}
+# Code to find highest LE in 2014:
+ind <- order(lestate$LE2014) 
+lestate$state[ind] 
+lestate$LE2014[ind]
+```
+
+
+```{r}
+# But how does that compare to the state that had the most improved LE from 2010 - 2014?
+State <- c("Mississippi", "West Virginia", "Hawaii")
+label <- data.frame(location_name = State, x = c(2013,2012, 2013), y = c(1010,975, 650))
+three <- AllMortality %>% filter(location_name %in% c("Mississippi", "West Virginia", "Hawaii"))
+three2 <- filter(three, cause_id == 294, sex_id == 3) 
+p1 <-  ggplot(data = three2, aes(year_id, mx, col = location_name)) 
+p1 +  geom_line() +
+   geom_text(data = label, aes(x, y, label = State), size = 5) +
+  ggtitle("All Cause Mortality from 2010-2014") +
+    ylab("All Cause Mortality Rates (Per 100,000)") +
+  xlab("Year") +
+   theme(legend.position = "none")
+```
+
+We can now see that West Virginia and Mississippi had very similar trends in all cause mortality rates and that Hawaii, the state with the highest life expectancy, had a much lower all cause mortality rates throughout the five years of data. It is important in these types of graphs to have a reference category to compare to in order not to draw false inferences. 
+
+Next, we wanted to see how life expectancy decline and the County Health Rankings (CHR) compared to each other. How did the county with the largest decrease in life expectancy fare in CHR?
+
+```{r}
+#How do the worst counties in each state for change in LE fair in the CHR ranking?
+
+#Mississippi
+ind <- order(mle$change) 
+mle$county[ind] #Grenada County, -0.52
+mle$change[ind]
+
+#West Virginia 
+ind <- order(wvle$change) 
+wvle$county[ind] #Logan County, 
+wvle$change[ind] #-0.37
+
+#find rank
+IV2 <- dplyr::filter(IV, State == c("West Virginia", "Mississippi"))
+Grenada <- IV2 %>% filter(County == "Grenada")
+Logan <- IV2 %>% filter(County == "Logan")
+Logan # Logan ranked 49 in 2011 and 51 in 2015 out of 55
+Grenada # Grenada ranked 54 in 2013 and 51 in 2015 out of 82
+```
+
+The county with the largest decrease in life expectancy in Mississippi ranked 51th out of 82 counties in 2015 (2014 data was not available) and the county in West Virginia with the largest decreased life expectancy ranked 49th out of 55 counties. 
