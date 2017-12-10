@@ -4,14 +4,12 @@ output:
   html_document:
     df_print: paged
 ---
+#https://hojames.github.io/ds-proj/
+###Alex Earle
+###Estelle Gong
+###Hannah James
+###Sohini Mukherjee
 
-```{r}
-library(tidyverse)
-library(ggplot2)
-library(dplyr)
-library(ggthemes)
-library(gridExtra)
-```
 # Motivation
 We are interested in exploring domestic health policy through the lens of county-level health rankings, mortality data, and other relevant determinants of health. Across the United States, there is broad diversity and variation in health status, access to care, and health outcomes. 
 
@@ -30,6 +28,14 @@ We wanted to dive further into mortality and attempt to understand the factors t
 For this project, we used the following data sources (all open access!):  
   [US county health rankings](https://www.rwjf.org/en/how-we-work/grants-explorer/featured-programs/county-health-ranking-roadmap.html)  
   [US county-level mortality data](http://ghdx.healthdata.org/record/united-states-life-expectancy-and-age-specific-mortality-risk-county-1980-2014)
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(ggthemes)
+library(gridExtra)
+```
 
 ###Cleaning and Reshaping Life Expectancy and Mortality Data
 
