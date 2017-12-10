@@ -28,59 +28,115 @@ We wanted to dive further into mortality and attempt to understand the factors t
 
 #Data Cleaning
 
-### Sources for Data Analysis:
+## Sources for Data Analysis:
 For this project, we used the following data sources (all open access!):  
   [US county health rankings](https://www.rwjf.org/en/how-we-work/grants-explorer/featured-programs/county-health-ranking-roadmap.html)  
   [US county-level mortality data](http://ghdx.healthdata.org/record/united-states-life-expectancy-and-age-specific-mortality-risk-county-1980-2014)
 
-####Cleaning and Reshaping Mortality Data
+###Cleaning and Reshaping Life Expectancy and Mortality Data
+
+Data was downloaded from [IHME](http://ghdx.healthdata.org/record/united-states-life-expectancy-and-age-specific-mortality-risk-county-1980-2014), the header cells were removed, formatting was removed, and it was saved into a .csv file for life expectancy and for mortality.
+
 ```{r}
 library(reshape2)
 library(rio)
-
-AllMortality <- import("Mortality.csv")
-
-unique(AllMortality$cause_name)
-str((AllMortality))
-
-AllMort_reshape <- filter(AllMortality, sex=="Both")
-AllMort_reshape <- select(AllMort_reshape, location_id, location_name, FIPS, cause_id, cause_name, year_id, mx)
-
-AllMort_reshape2 <- spread(AllMort_reshape, year_id, mx)
-
-save(AllMortality, file="AllMortality.rda"")
-
 ```
 
-####Cleaning and Reshaping Predictors Data from CHR
+Life Expectancy Data: 
 ```{r}
-IV_2014_1 <- read.csv(file="IV_2014_1_csv.csv")
+finalLE <- import("ledata.csv")
+```
+
+Mortality Data:
+
+State-level mortality rates were downloaded from IHME and merged. Data were only available in state files.
+```{r}
+Alaska <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_ALASKA_Y2017M05D19.csv" )
+Alabama <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_ALABAMA_Y2017M05D19.csv" )
+Arizona <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_ARIZONA_Y2017M05D19.csv" )
+Arkansas <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_ARKANSAS_Y2017M05D19.csv" )
+California <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_CALIFORNIA_Y2017M05D19.csv" )
+COLORADO <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_COLORADO_Y2017M05D19.csv" )
+CONNECTICUT <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_CONNECTICUT_Y2017M05D19.csv" )
+DELAWARE <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_DELAWARE_Y2017M05D19.csv" )
+DC <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_DISTRICT_OF_COLUMBIA_Y2017M05D19.csv" )
+FLORIDA <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_FLORIDA_Y2017M05D19.csv" )
+GEORGIA <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_GEORGIA_Y2017M05D19.csv" )
+HAWAII <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_HAWAII_Y2017M05D19.csv" )
+IDAHO <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_IDAHO_Y2017M05D19.csv" )
+ILLINOIS <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_ILLINOIS_Y2017M05D19.csv" )
+INDIANA <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_INDIANA_Y2017M05D19.csv" )
+IOWA <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_IOWA_Y2017M05D19.csv" )
+KANSAS <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_KANSAS_Y2017M05D19.csv" )
+KENTUCKY <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_KENTUCKY_Y2017M05D19.csv" )
+LOUISIANA <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_LOUISIANA_Y2017M05D19.csv" )
+MAINE <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_MAINE_Y2017M05D19.csv" )
+MARYLAND <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_MARYLAND_Y2017M05D19.csv" )
+MASSACHUSETTS <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_MASSACHUSETTS_Y2017M05D19.csv" )
+MIGHIGAN <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_MICHIGAN_Y2017M05D19.csv" )
+MINNESOTA <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_MINNESOTA_Y2017M05D19.csv" )
+MISSISSIPPI <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_MISSISSIPPI_Y2017M05D19.csv" )
+MISSOURI <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_MISSOURI_Y2017M05D19.csv" )
+MONTANA <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_MONTANA_Y2017M05D19.csv" )
+NEBRASKA <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_NEBRASKA_Y2017M05D19.csv" )
+NEVADA <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_NEVADA_Y2017M05D19.csv" )
+NEWHAMPSHIRE <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_NEW_HAMPSHIRE_Y2017M05D19.csv" )
+NEWJERSEY <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_NEW_JERSEY_Y2017M05D19.csv" )
+NEWMEXICO <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_NEW_MEXICO_Y2017M05D19.csv" )
+NEWYORK <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_NEW_YORK_Y2017M05D19.csv" )
+NORTHCAROLINA <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_NORTH_CAROLINA_Y2017M05D19.csv" )
+NORTHDAKOTA <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_NORTH_DAKOTA_Y2017M05D19.csv" )
+OHIO <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_OHIO_Y2017M05D19.csv" )
+OKLAHOMA <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_OKLAHOMA_Y2017M05D19.csv" )
+OREGON <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_OREGON_Y2017M05D19.csv" )
+PENNSYLVANIA <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_PENNSYLVANIA_Y2017M05D19.csv" )
+RHODEISLAND <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_RHODE_ISLAND_Y2017M05D19.csv" )
+SOUTHCAROLINA <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_SOUTH_CAROLINA_Y2017M05D19.csv" )
+SOUTHDAKOTA <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_SOUTH_DAKOTA_Y2017M05D19.csv" )
+TENNESSEE <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_TENNESSEE_Y2017M05D19.csv" )
+TEXAS <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_TEXAS_Y2017M05D19.csv" )
+UTAH <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_UTAH_Y2017M05D19.csv" )
+VERMONT <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_VERMONT_Y2017M05D19.csv" )
+VIRGINIA <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_VIRGINIA_Y2017M05D19.csv" )
+WASHINGTON <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_WASHINGTON_Y2017M05D19.csv" )
+WESTVIRGINIA <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_WEST_VIRGINIA_Y2017M05D19.csv" )
+WISCONSIN <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_WISCONSIN_Y2017M05D19.csv" )
+WYOMING <- import(file="IHMEdata/IHME_USA_COUNTY_MORTALITY_RATES_1980_2014_WYOMING_Y2017M05D19.csv" )
+```
+
+```{r}
+AllMortality <- rbind(Alaska, Alabama, Arizona, Arkansas, California, COLORADO, CONNECTICUT, DELAWARE, DC, FLORIDA, GEORGIA, HAWAII, IDAHO, ILLINOIS, INDIANA, IOWA, KANSAS, KENTUCKY, LOUISIANA, MAINE,  MASSACHUSETTS, MARYLAND, MIGHIGAN, MINNESOTA, MISSISSIPPI, MISSOURI, MONTANA, NEBRASKA, NEVADA, NEWHAMPSHIRE, NEWYORK, NEWJERSEY, NEWMEXICO, NORTHCAROLINA, NORTHDAKOTA, OHIO, OKLAHOMA, OREGON, PENNSYLVANIA, RHODEISLAND, SOUTHCAROLINA, SOUTHDAKOTA, TENNESSEE, TEXAS, UTAH, VERMONT, VIRGINIA, WASHINGTON, WESTVIRGINIA, WISCONSIN, WYOMING) #merge all 51 states
+
+AllMortality <- dplyr::filter(AllMortality, year_id >= 2010) # keep only data from 2010 - 2014
+
+save(AllMortality, file="AllMortality.Rda")
+```
+
+###Independent Variables from the RWJF
+
+Prior to uploading to R, Excel files were downloaded from the RWJF Country Health ranking website for the year 2014. Files were examined in Excel and formatted correctly to make compatible with R. This included deleting rows above the header and identifying andrenaming variables relevant to the analysis.
+
+```{r}
+IV_2014_1 <- import("IV_2014_1_csv.csv")
+
 IV_2014_1 <- IV_2014_1[, -c(39:81)]
+
 IV_2014_1$year <- NA
 IV_2014_1 <- IV_2014_1[,c(1:3,39,4:38)]
 IV_2014_1$year <- 2014
-```
 
-Check naming inconsistencies
-```{r}
-str(IV)
-```
+IV <- bind_rows(IV_2014_1) #Initial binding rows
 
-Rename 2014 "Physically.Inactive" to "inactive_percent"
-```{r}
 str(IV_2014_1$X..Physically.Inactive)
-names(IV_2014_1)[names(IV_2014_1) == 'X..Physically.Inactive'] <- 'inactive_percent'
-```
 
-Remake IV dataframe
-```{r}
-IV <- bind_rows(IV_2010_1,IV_2011_1,IV_2012_1,IV_2013_1,IV_2014_1,IV_2015_1,IV_2016_1)
+names(IV_2014_1)[names(IV_2014_1) == 'X..Physically.Inactive'] <- 'inactive_percent' #Rename 2014 "Physically.Inactive" to "inactive_percent"
+
+IV <- bind_rows(IV_2014_1)
 str(IV)
 names(IV)[names(IV) == 'ï..FIPS'] <- 'FIPS'
 names(IV)[names(IV) == 'MORT_quart.1'] <- 'MORB_quart'
-```
-Convert rows to numerics
-```{r}
+
+#Convert rows to numerics
 IV$HO_rank <- as.numeric(IV$HO_rank)
 IV$HO_quart <- as.numeric(as.character(IV$HO_quart))
 IV$HF_rank <- as.numeric(IV$HF_rank)
@@ -97,7 +153,106 @@ IV$SE_rank <- as.numeric(IV$SE_rank)
 IV$SE_quart <- as.numeric(as.character(IV$SE_quart))
 IV$PE_rank <- as.numeric(IV$PE_rank)
 IV$PE_quart <- as.numeric(as.character(IV$PE_quart))
+
+#Examine structure of IV
+str(IV)
+
 save(IV,file="Predictors_1.Rda")
+```
+
+###Z-Scores
+The predictors were theh converted to z-scores to standardize the ranks. 
+
+
+```{r}
+#loading 2014 data
+RWJFMeasures_2014  <- import("IV_2014_healthrank.csv")
+
+str(RWJFMeasures_2014)
+names(RWJFMeasures_2014)[names(RWJFMeasures_2014) == 'ï..FIPS'] <- 'FIPS'
+RWJFMeasures_2014$HO_rank <- as.numeric(as.character(RWJFMeasures_2014$HO_rank))
+RWJFMeasures_2014$HF_rank <- as.numeric(as.character(RWJFMeasures_2014$HF_rank))
+RWJFMeasures_2014$MORT_rank <- as.numeric(as.character(RWJFMeasures_2014$MORT_rank))
+RWJFMeasures_2014$MORB_rank <- as.numeric(as.character(RWJFMeasures_2014$MORB_rank))
+RWJFMeasures_2014$HB_rank <- as.numeric(as.character(RWJFMeasures_2014$HB_rank))
+RWJFMeasures_2014$CC_rank <- as.numeric(as.character(RWJFMeasures_2014$CC_rank))
+RWJFMeasures_2014$SE_rank <- as.numeric(as.character(RWJFMeasures_2014$SE_rank))
+RWJFMeasures_2014$PE_rank <- as.numeric(as.character(RWJFMeasures_2014$PE_rank))
+str(RWJFMeasures_2014)
+RWJFMeasures_2014$HO_rank <- ave(RWJFMeasures_2014$HO_rank, RWJFMeasures_2014$State, FUN=scale)
+
+#Get zscores
+RWJFMeasures_2014$HF_rank <- ave(RWJFMeasures_2014$HF_rank, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$MORT_rank <- ave(RWJFMeasures_2014$MORT_rank, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$MORB_rank <- ave(RWJFMeasures_2014$MORB_rank, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$HB_rank <- ave(RWJFMeasures_2014$HB_rank, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$CC_rank <- ave(RWJFMeasures_2014$CC_rank, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$SE_rank <- ave(RWJFMeasures_2014$SE_rank, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$PE_rank <- ave(RWJFMeasures_2014$PE_rank, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014 <- add_column(RWJFMeasures_2014, deaths_zscore="Deaths", .after = "Deaths")
+RWJFMeasures_2014 <- add_column(RWJFMeasures_2014, pop_zscore="Population", .after = "Population")
+RWJFMeasures_2014$deaths_zscore <- ave(RWJFMeasures_2014$Deaths, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$pop_zscore <- ave(RWJFMeasures_2014$Population, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$YPPL_rate <- ave(RWJFMeasures_2014$YPPL_rate, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$Fair_percent <- ave(RWJFMeasures_2014$Fair_percent, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$PPH_days <- ave(RWJFMeasures_2014$PPH_days, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$PMH_days <- ave(RWJFMeasures_2014$PMH_days, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$LBW_percent <- ave(RWJFMeasures_2014$LBW_percent, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$smoking_percent <- ave(RWJFMeasures_2014$smoking_percent, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$Obese_percent <- ave(RWJFMeasures_2014$Obese_percent, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$FoodEnv_Index <- ave(RWJFMeasures_2014$FoodEnv_Index, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$inactive_percent <- ave(RWJFMeasures_2014$inactive_percent, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$Exercise_access_percent <- ave(RWJFMeasures_2014$Exercise_access_percent, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$Binge_percent <- ave(RWJFMeasures_2014$Binge_percent, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$CHL_100000 <- ave(RWJFMeasures_2014$CHL_100000, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$TeenB_rate <- ave(RWJFMeasures_2014$TeenB_rate, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$Uninsure_percent <- ave(RWJFMeasures_2014$Uninsure_percent, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$PCP_rate <- ave(RWJFMeasures_2014$PCP_rate, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$dentist_rate <- ave(RWJFMeasures_2014$dentist_rate, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$MHP_rate <- ave(RWJFMeasures_2014$MHP_rate, RWJFMeasures_2014$State, FUN=scale)
+
+RWJFMeasures_2014$hbac_rate <- ave(RWJFMeasures_2014$hbac_rate, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$mammo_percent <- ave(RWJFMeasures_2014$mammo_percent, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$Hsgrad_rate <- ave(RWJFMeasures_2014$Hsgrad_rate, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$college_percent <- ave(RWJFMeasures_2014$college_percent, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$unemploy_rate <- ave(RWJFMeasures_2014$unemploy_rate, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$Childpov_percent <- ave(RWJFMeasures_2014$Childpov_percent, RWJFMeasures_2014$State, FUN=scale)
+
+RWJFMeasures_2014$singleparent_percent <- ave(RWJFMeasures_2014$singleparent_percent, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$social_assoc_rate <- ave(RWJFMeasures_2014$social_assoc_rate, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$violentcrime_rate <- ave(RWJFMeasures_2014$violentcrime_rate, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$airpollution <- ave(RWJFMeasures_2014$airpollution, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$drinkingwater_viol <- ave(RWJFMeasures_2014$drinkingwater_viol, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$severehousing_percent <- ave(RWJFMeasures_2014$severehousing_percent, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$driving_alone_percent <- ave(RWJFMeasures_2014$driving_alone_percent, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$longcommute_percent <- ave(RWJFMeasures_2014$longcommute_percent, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$alc_drivingdeath <- ave(RWJFMeasures_2014$alc_drivingdeath, RWJFMeasures_2014$State, FUN=scale)
+
+RWJFMeasures_2014$acscrate <- ave(RWJFMeasures_2014$acscrate, RWJFMeasures_2014$State, FUN=scale)
+RWJFMeasures_2014$injurydeathrate <- ave(RWJFMeasures_2014$injurydeathrate, RWJFMeasures_2014$State, FUN=scale)
+
+save(RWJFMeasures_2014,file="RWJFMeasures_2014.Rda")
+
+```
+
+###Finalize z-scores for performing PCA for Mississippi and West Virginia
+
+Subset health factor variables only, removing county/state info
+```{r}
+zscores <- RWJFMeasures_2014[c(1:4,22:50)] 
+```
+
+Filter to needed states
+```{r}
+zMS_WV <- zscores %>% filter(State== "Mississippi" | State == "West Virginia") # two states with declining LE
+save(zMS_WV, file="zMS_WV.rda")
+
+```
+
+Load .xlsx of factor names to merge during PCA analysis
+```{r}
+factornames  <- import("factornames.xlsx")
+save(factornames, file="factornames.rda")
 ```
 
 #Exploratory Data Analysis
@@ -107,7 +262,6 @@ save(IV,file="Predictors_1.Rda")
 In order to get a better understanding of where the most serious decline in life expectancy from 2010 to 2014 is happening in the U.S., we used the below code to generate the list of counties with the largest decrease in life expectancy. 
 
 ```{r}
-
 load(file = "finalLE.rda")
 load(file = "AllMortality.rda")
 load(file = "Predictors_1.rda")
@@ -194,6 +348,7 @@ p1 +  geom_line() +
   ylab("All Cause Mortality Rates (Per 100,000)") +
   xlab("Year") +
    theme(legend.position = "none")
+
 ```
 
 This graph above shows that both West Virginia and Mississippi saw an increase in all cause mortality rates, which corroborates our findings in our life expectancy decline exploration. 
@@ -241,12 +396,22 @@ wvle$county[ind] #Logan County,
 wvle$change[ind] #-0.37
 
 #find rank
-IV2 <- dplyr::filter(IV, State == c("West Virginia", "Mississippi"))
+IV2 <- IV %>% filter(State == "West Virginia" | State == "Mississippi")
 Grenada <- IV2 %>% filter(County == "Grenada")
 Logan <- IV2 %>% filter(County == "Logan")
-Logan # Logan ranked 49 in 2011 and 51 in 2015 out of 55
-Grenada # Grenada ranked 54 in 2013 and 51 in 2015 out of 82
 ```
+
+```{r}
+Logan 
+```
+
+Logan County, WV ranked 52 out of 55 counties for health outcomes and 51/55 for health factors in 2014.
+
+```{r}
+Grenada 
+```
+
+Grenada County, MS ranked 45 out of 81 counties for health outcomes and 38/81 for health factors in 2014.
 
 The county with the largest decrease in life expectancy in Mississippi ranked 51th out of 82 counties in 2015 (2014 data was not available) and the county in West Virginia with the largest decreased life expectancy ranked 49th out of 55 counties. 
 
@@ -260,8 +425,8 @@ We want to see if these group classifications and their weights hold up in expla
 We'll begin by creating a data frame of ONLY z-scores for the 29 variables, for Misssissippi and West Virginia. 
 
 ```{r}
-load(file= "Z-scores_MS_WV")
-load(file="factornames")
+load(file= "zMS_WV.rda")
+load(file="factornames.rda")
 
 varMS <- zMS_WV%>% filter(State=="Mississippi")
 varMS <- varMS[c(5:33)] 
@@ -285,8 +450,6 @@ Turns out, there are 91 missing values across the 82 counties for MS.
 ```{r}
 sum(is.na(varMS))
 ```
-
-We have 91 missing values across the 82 counties for MS. 
 
 ```{r}
 varMS.na.omit<- na.omit(varMS)
