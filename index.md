@@ -4,12 +4,13 @@ title: Understanding Recent Life Expectancy Declines in the United States throug
 
 ## Project Site Outline:
 1. Overview (embed screencast here?)
-2. Related Work for Motivation/Inspiration (links to relevant articles)
-3. Initial Research Questions
-4. Data
-5. Relevant EDA
-6. Final Analysis
-7. Summarizing Conclusions
+2. Related Work for Motivation/Inspiration
+3. Data Sources
+4. Project Development
+5. Exploratory Analysis of Mortality Rates and Health Rankings
+6. Principal Component Analysis
+7. PCA vs. CHR
+8. Summarizing Conclusions
 
 ### Motivation
 We are interested in exploring domestic health policy through the lens of county-level health rankings, mortality data, and other relevant determinants of health. Across the United States, there is broad diversity and variation in health status, access to care, and health outcomes. 
