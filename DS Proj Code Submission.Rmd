@@ -1,0 +1,352 @@
+---
+title: "Master Data Cleaning"
+author: "SM"
+date: "December 10, 2017"
+output: html_document
+---
+
+###Overview and Motivation
+We were interested in exploring domestic health policy through the lens of county-level health rankings, mortality data, and other relevant determinants of health. Across the United States, there is broad diversity and variation in health status, access to care, and health outcomes.
+We are curious about the decline of life expectancy in the US (for the first time since the 1990s), and which groups of people (by location, race, income level, or other factors) experienced different changes in mortality and by what cause of death. This analysis could provide insights that could guide targeted health interventions for specific communities in the US.
+We applied principal component analysis to both Mississippi and Hawaii, comparing to a "healty state" Hawaii. 
+
+###Related Work
+As we embarked on this project, we found that we weren’t the only ones interested in exploring disparities in life expectancy/determinants of health at the county level.
+
+
+
+###Data
+
+##Independent Variables from the RWJF
+
+Prior to uploading to R, Excel files were downloaded from the RWJF Country Health ranking website for the years 2010-2016. Files were examined in Excel and formatted correctly to make compatible with R.This included deleting rows above the header and identifying andrenaming variables relevant to the analysis.
+
+
+```{r}
+IV_2010_1 <- read.csv(file="IV_2010_1_csv.csv") #Uploading data
+IV_2011_1 <- read.csv(file="IV_2011_1_csv.csv")
+IV_2012_1 <- read.csv(file="IV_2012_1_csv.csv")
+IV_2013_1 <- read.csv(file="IV_2013_1_csv.csv")
+IV_2014_1 <- read.csv(file="IV_2014_1_csv.csv")
+IV_2015_1 <- read.csv(file="IV_2015_1_csv.csv")
+IV_2016_1 <- read.csv(file="IV_2016_1_csv.csv")
+IV_2010_1 <- IV_2010_1[, -c(38:39, 41:71)] #Delete columns
+IV_2012_1 <- IV_2012_1[, -c(40:73)]
+IV_2013_1 <- IV_2013_1[, -c(31:61)]
+IV_2013_1 <- filter(IV_2013_1, County != "") #delete empty county rows for 2013
+IV_2014_1 <- IV_2014_1[, -c(39:81)]
+IV_2016_1 <- IV_2016_1[, -c(39:83)]
+
+IV_2010_1$year <- NA #Add year
+IV_2010_1 <- IV_2010_1[,c(1:3,41,4:40)]
+IV_2010_1$year <- 2010
+
+IV_2011_1$year <- NA
+IV_2011_1 <- IV_2011_1[,c(1:3,39,4:38)]
+IV_2011_1$year <- 2011
+
+IV_2012_1$year <- NA
+IV_2012_1 <- IV_2012_1[,c(1:3,40,4:39)]
+IV_2012_1$year <- 2012
+
+IV_2013_1$year <- NA
+IV_2013_1 <- IV_2013_1[,c(1:3,31,4:30)]
+IV_2013_1$year <- 2013
+
+IV_2014_1$year <- NA
+IV_2014_1 <- IV_2014_1[,c(1:3,39,4:38)]
+IV_2014_1$year <- 2014
+
+IV_2015_1$year <- NA
+IV_2015_1 <- IV_2015_1[,c(1:3,39,4:38)]
+IV_2015_1$year <- 2015
+
+IV_2016_1$year <- NA
+IV_2016_1 <- IV_2016_1[,c(1:3,39,4:38)]
+IV_2016_1$year <- 2016
+
+IV <- bind_rows(IV_2010_1,IV_2011_1,IV_2012_1,IV_2013_1,IV_2014_1,IV_2015_1,IV_2016_1) #Initial binding rows
+
+str(IV_2011_1$PCP.Rate) #Rename 2011 "PCP.Rate"" to "PCP_rate"
+
+names(IV_2011_1)[names(IV_2011_1) == 'PCP.Rate'] <- 'PCP_rate'
+
+str(IV_2014_1$X..Physically.Inactive)
+names(IV_2014_1)[names(IV_2014_1) == 'X..Physically.Inactive'] <- 'inactive_percent' #Rename 2014 "Physically.Inactive" to "inactive_percent"
+IV <- bind_rows(IV_2010_1,IV_2011_1,IV_2012_1,IV_2013_1,IV_2014_1,IV_2015_1,IV_2016_1)
+str(IV)
+names(IV)[names(IV) == 'ï..FIPS'] <- 'FIPS'
+names(IV)[names(IV) == 'MORT_quart.1'] <- 'MORB_quart'
+
+#Convert rows to numerics
+IV$HO_rank <- as.numeric(IV$HO_rank)
+IV$HO_quart <- as.numeric(as.character(IV$HO_quart))
+IV$HF_rank <- as.numeric(IV$HF_rank)
+IV$HF_quart <- as.numeric(as.character(IV$HF_quart))
+IV$MORT_rank <- as.numeric(IV$MORT_rank)
+IV$MORT_quart <- as.numeric(as.character(IV$MORT_quart))
+IV$MORB_rank <- as.numeric(IV$MORB_rank)
+IV$MORB_quart <- as.numeric(as.character(IV$MORB_quart))
+IV$HB_rank <- as.numeric(IV$HB_rank)
+IV$HB_quart <- as.numeric(as.character(IV$HB_quart))
+IV$CC_rank <- as.numeric(IV$CC_rank)
+IV$CC_quart <- as.numeric(as.character(IV$CC_quart))
+IV$SE_rank <- as.numeric(IV$SE_rank)
+IV$SE_quart <- as.numeric(as.character(IV$SE_quart))
+IV$PE_rank <- as.numeric(IV$PE_rank)
+IV$PE_quart <- as.numeric(as.character(IV$PE_quart))
+
+#Examine structure of IV
+str(IV)
+#Save
+setwd("C:/Users/Sohini Mukherjee/OneDrive/Documents/Harvard University/Academic/Fall 2017/BST 260 - Data Science I/DS-Proj_Pull")
+save(IV,file="Predictors_1.Rda")
+```
+
+##Z-Scores
+The predictors were theh converted to z-scores to standardize the ranks. This was initially done for 2015, but we then changed our analysis to 2014. Therefore the code reflected below specifies 2015 but is working with 2014 data and saved in the 2014 dataframe. 
+
+
+```{r}
+RWJFMeasures_2015 <- read.csv("C:IV_2014_healthrank.csv") #loading 2014 data
+str(RWJFMeasures_2015)
+names(RWJFMeasures_2015)[names(RWJFMeasures_2015) == 'ï..FIPS'] <- 'FIPS'
+RWJFMeasures_2015$HO_rank <- as.numeric(as.character(RWJFMeasures_2015$HO_rank))
+RWJFMeasures_2015$HF_rank <- as.numeric(as.character(RWJFMeasures_2015$HF_rank))
+RWJFMeasures_2015$MORT_rank <- as.numeric(as.character(RWJFMeasures_2015$MORT_rank))
+RWJFMeasures_2015$MORB_rank <- as.numeric(as.character(RWJFMeasures_2015$MORB_rank))
+RWJFMeasures_2015$HB_rank <- as.numeric(as.character(RWJFMeasures_2015$HB_rank))
+RWJFMeasures_2015$CC_rank <- as.numeric(as.character(RWJFMeasures_2015$CC_rank))
+RWJFMeasures_2015$SE_rank <- as.numeric(as.character(RWJFMeasures_2015$SE_rank))
+RWJFMeasures_2015$PE_rank <- as.numeric(as.character(RWJFMeasures_2015$PE_rank))
+str(RWJFMeasures_2015)
+RWJFMeasures_2015$HO_rank <- ave(RWJFMeasures_2015$HO_rank, RWJFMeasures_2015$State, FUN=scale)
+
+#Get zscores
+RWJFMeasures_2015$HF_rank <- ave(RWJFMeasures_2015$HF_rank, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$MORT_rank <- ave(RWJFMeasures_2015$MORT_rank, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$MORB_rank <- ave(RWJFMeasures_2015$MORB_rank, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$HB_rank <- ave(RWJFMeasures_2015$HB_rank, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$CC_rank <- ave(RWJFMeasures_2015$CC_rank, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$SE_rank <- ave(RWJFMeasures_2015$SE_rank, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$PE_rank <- ave(RWJFMeasures_2015$PE_rank, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015 <- add_column(RWJFMeasures_2015, deaths_zscore="Deaths", .after = "Deaths")
+RWJFMeasures_2015 <- add_column(RWJFMeasures_2015, pop_zscore="Population", .after = "Population")
+RWJFMeasures_2015$deaths_zscore <- ave(RWJFMeasures_2015$Deaths, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$pop_zscore <- ave(RWJFMeasures_2015$Population, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$YPPL_rate <- ave(RWJFMeasures_2015$YPPL_rate, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$Fair_percent <- ave(RWJFMeasures_2015$Fair_percent, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$PPH_days <- ave(RWJFMeasures_2015$PPH_days, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$PMH_days <- ave(RWJFMeasures_2015$PMH_days, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$LBW_percent <- ave(RWJFMeasures_2015$LBW_percent, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$smoking_percent <- ave(RWJFMeasures_2015$smoking_percent, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$Obese_percent <- ave(RWJFMeasures_2015$Obese_percent, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$FoodEnv_Index <- ave(RWJFMeasures_2015$FoodEnv_Index, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$inactive_percent <- ave(RWJFMeasures_2015$inactive_percent, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$Exercise_access_percent <- ave(RWJFMeasures_2015$Exercise_access_percent, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$Binge_percent <- ave(RWJFMeasures_2015$Binge_percent, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$CHL_100000 <- ave(RWJFMeasures_2015$CHL_100000, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$TeenB_rate <- ave(RWJFMeasures_2015$TeenB_rate, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$Uninsure_percent <- ave(RWJFMeasures_2015$Uninsure_percent, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$PCP_rate <- ave(RWJFMeasures_2015$PCP_rate, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$dentist_rate <- ave(RWJFMeasures_2015$dentist_rate, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$MHP_rate <- ave(RWJFMeasures_2015$MHP_rate, RWJFMeasures_2015$State, FUN=scale)
+
+RWJFMeasures_2015$hbac_rate <- ave(RWJFMeasures_2015$hbac_rate, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$mammo_percent <- ave(RWJFMeasures_2015$mammo_percent, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$Hsgrad_rate <- ave(RWJFMeasures_2015$Hsgrad_rate, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$college_percent <- ave(RWJFMeasures_2015$college_percent, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$unemploy_rate <- ave(RWJFMeasures_2015$unemploy_rate, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$Childpov_percent <- ave(RWJFMeasures_2015$Childpov_percent, RWJFMeasures_2015$State, FUN=scale)
+
+RWJFMeasures_2015$singleparent_percent <- ave(RWJFMeasures_2015$singleparent_percent, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$social_assoc_rate <- ave(RWJFMeasures_2015$social_assoc_rate, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$violentcrime_rate <- ave(RWJFMeasures_2015$violentcrime_rate, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$airpollution <- ave(RWJFMeasures_2015$airpollution, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$drinkingwater_viol <- ave(RWJFMeasures_2015$drinkingwater_viol, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$severehousing_percent <- ave(RWJFMeasures_2015$severehousing_percent, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$driving_alone_percent <- ave(RWJFMeasures_2015$driving_alone_percent, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$longcommute_percent <- ave(RWJFMeasures_2015$longcommute_percent, RWJFMeasures_2015$State, FUN=scale)
+
+RWJFMeasures_2015$acscrate <- ave(RWJFMeasures_2015$acscrate, RWJFMeasures_2015$State, FUN=scale)
+RWJFMeasures_2015$injurydeathrate <- ave(RWJFMeasures_2015$injurydeathrate, RWJFMeasures_2015$State, FUN=scale)
+
+#Mistake made - use for 2014 data
+RWJFMeasures_2014 <- RWJFMeasures_2015
+```
+
+
+#Finalize z-scores for performing PCA for Mississippi and West Virginia
+
+```{r}
+
+zscores <- RWJFMeasures_2014[c(1:4,22:49)] #subset health factor variables only
+names(zscores) # we are missing alcohol driving deaths!
+
+library(readxl) #download from CHR
+alcoholdeaths <- read_excel("~/Documents/Fall2017/BST260/FinalProject/ds-proj/DATA CLEANING/RAW DATA/alcoholdeaths.xlsx",
+    col_types = c("numeric", "text", "text",
+        "numeric"))
+View(alcoholdeaths)
+
+alcoholdeaths$alc_drivingdeath <- ave(alcoholdeaths$alc_drivingdeath, alcoholdeaths$State, FUN=scale) #zscore
+zscores <- left_join(zscores,alcoholdeaths, by = c("FIPS"="FIPS","State"="State","County"="County")) #join to main data set
+
+```
+
+Filter to needed states
+```{r}
+
+zMS_WV <- zscores %>% filter(State== "Mississippi" | State == "West Virginia") # two states with declinine LE
+
+save(zMS_WV, file="Z-scores_MS_WV")
+
+```
+
+Load data frame of factor names to merge during PCA
+
+```{r}
+factornames<- read_excel("~/Documents/Fall2017/BST260/FinalProject/ds-proj/DATA CLEANING/RAW DATA/factornames.xlsx", 
+    col_types = c("text","text","text"))
+
+save(factornames, file="factornames")
+
+```
+
+
+##Demographic data
+Demographic data was dowloaded from the American Community Survey. In Excel, rows above the header were deleted before importing into R and relevant variables were renamed.
+
+```{r}
+#Uploading Race data
+Race_2010 <- read.csv("ACS_2010_Race.csv")
+Race_2011 <- read.csv("ACS_2011_Race.csv")
+Race_2012 <- read.csv("ACS_2012_Race.csv")
+Race_2013 <- read.csv("ACS_2013_Race.csv")
+Race_2014 <- read.csv("ACS_2014_Race.csv")
+Race_2015 <- read.csv("ACS_2015_Race.csv")
+Race_2016 <- read.csv("ACS_2016_Race.csv")
+#Delete columns
+Race_2010 <- Race_2010[, -c(1)]
+
+#Add year
+Race_2010$year <- NA
+Race_2010$year <- 2010
+Race_2010 <- Race_2010[,c(1,2,9,3:8)]
+
+Race_2011$year <- NA
+Race_2011$year <- 2011
+Race_2011 <- Race_2011[,c(1,2,9,3:8)]
+
+Race_2012$year <- NA
+Race_2012$year <- 2012
+Race_2012 <- Race_2012[,c(1,2,9,3:8)]
+
+Race_2013$year <- NA
+Race_2013$year <- 2013
+Race_2013 <- Race_2013[,c(1,2,9,3:8)]
+
+Race_2014$year <- NA
+Race_2014$year <- 2014
+Race_2014 <- Race_2014[,c(1,2,9,3:8)]
+
+Race_2015$year <- NA
+Race_2015$year <- 2015
+Race_2015 <- Race_2015[,c(1,2,9,3:8)]
+
+Race_2016$year <- NA
+Race_2016$year <- 2016
+Race_2016 <- Race_2016[,c(1,2,9,3:8)]
+
+#Initial binding rows
+Race <- bind_rows(Race_2010,Race_2011,Race_2012,Race_2013,Race_2014,Race_2015,Race_2016)
+
+#Check naming inconsistencies
+str(Race)
+#Delete Race
+
+rm(Race)
+#Rename Geography in Race_2015
+names(Race_2015)[names(Race_2015) == 'Geography'] <- 'County_State'
+
+#Binding rows
+
+Race <- bind_rows(Race_2010,Race_2011,Race_2012,Race_2013,Race_2014,Race_2015,Race_2016)
+str(Race)
+
+#Save data
+setwd("C:/Users/Sohini Mukherjee/OneDrive/Documents/Harvard University/Academic/Fall 2017/BST 260 - Data Science I/DS-Proj_Save_SM")
+save(Race, file="Race.Rda")
+```
+
+Uploading Age data
+```{r}
+Age_2010 <- read.csv("C:/Users/Sohini Mukherjee/OneDrive/Documents/Harvard University/Academic/Fall 2017/BST 260 - Data Science I/Final Project/ACS/Age/ACS_2010_Age.csv")
+Age_2011 <- read.csv("C:/Users/Sohini Mukherjee/OneDrive/Documents/Harvard University/Academic/Fall 2017/BST 260 - Data Science I/Final Project/ACS/Age/ACS_2011_Age.csv")
+Age_2012 <- read.csv("C:/Users/Sohini Mukherjee/OneDrive/Documents/Harvard University/Academic/Fall 2017/BST 260 - Data Science I/Final Project/ACS/Age/ACS_2012_Age.csv")
+Age_2013 <- read.csv("C:/Users/Sohini Mukherjee/OneDrive/Documents/Harvard University/Academic/Fall 2017/BST 260 - Data Science I/Final Project/ACS/Age/ACS_2013_Age.csv")
+Age_2014 <- read.csv("C:/Users/Sohini Mukherjee/OneDrive/Documents/Harvard University/Academic/Fall 2017/BST 260 - Data Science I/Final Project/ACS/Age/ACS_2014_Age.csv")
+Age_2015 <- read.csv("C:/Users/Sohini Mukherjee/OneDrive/Documents/Harvard University/Academic/Fall 2017/BST 260 - Data Science I/Final Project/ACS/Age/ACS_2015_Age.csv")
+Age_2016 <- read.csv("C:/Users/Sohini Mukherjee/OneDrive/Documents/Harvard University/Academic/Fall 2017/BST 260 - Data Science I/Final Project/ACS/Age/ACS_2016_Age.csv")
+```
+
+Add year
+```{r}
+Age_2010$year <- NA
+Age_2010$year <- 2010
+Age_2010 <- Age_2010[,c(1,2,89,3:7)]
+
+Age_2011$year <- NA
+Age_2011$year <- 2011
+Age_2011 <- Age_2011[,c(1,2,91, 3:7)]
+
+Age_2012$year <- NA
+Age_2012$year <- 2012
+Age_2012 <- Age_2012[,c(1,2,7, 3:6)]
+
+Age_2013$year <- NA
+Age_2013$year <- 2013
+Age_2013 <- Age_2013[,c(1,2,13, 3:12)]
+
+Age_2014$year <- NA
+Age_2014$year <- 2014
+Age_2014 <- Age_2014[,c(1,2,12, 3:11)]
+
+Age_2015$year <- NA
+Age_2015$year <- 2015
+Age_2015 <- Age_2015[,c(1,2,11,3:10)]
+
+Age_2016$year <- NA
+Age_2016$year <- 2016
+Age_2016 <- Age_2016[,c(1,2,168,3:167)]
+```
+
+
+Choose columns:
+```{r}
+Age_2013 <- select(Age_2013, FIPS, County_State, year, Total, Male, Female, Under_5, Above_65)
+Age_2014<- select(Age_2014, FIPS, County_State, year, Total, Male, Female, Under_5, Above_65)
+Age_2015 <- select(Age_2015, FIPS, County_State, year, Male, Female, Under_5, Above_65)
+Age_2016 <- select(Age_2016, FIPS, Geography,year, Total, Male, Female, Under_5, Above_65)
+
+```
+
+Fix columns:
+```{r}
+names(Age_2016)[names(Age_2016) == "Geography"] <- "County_State"
+Age_2012$Above_65 <- NA
+Age_2015$Total <- Age_2015$Male + Age_2015$Female
+```
+
+```{r}
+Age <- bind_rows(Age_2010, Age_2011, Age_2012, Age_2013, Age_2014, Age_2015, Age_2016)
+str(Age)
+```
+Save data
+```{r}
+save(Age, file="Pop_Sex_Age.Rda")
+```
+
+
+
+
