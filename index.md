@@ -4,13 +4,14 @@ title: Understanding Recent Life Expectancy Declines in the United States throug
 
 ## Project Site Outline:
 1. Overview (embed screencast here?)
-2. Related Work for Motivation/Inspiration
-3. Data Sources
-4. Project Development
-5. Exploratory Analysis of Mortality Rates and Health Rankings
-6. Principal Component Analysis
-7. PCA vs. CHR
-8. Summarizing Conclusions
+2. [Motivation](#motivation)
+3. [Related Work](#related-work)
+4. [Data Sources](#sources-for-data-analysis)
+5. [Project Development](#project-development)
+6. [Exploratory Analysis of Mortality Rates and Health Rankings](#exploratory-analysis-of-mortality-rates-and-health-rankings)
+6. [Principal Component Analysis](#principal-component-analysis)
+7. [PCA vs. CHR](#county-health-rankings-vs-principal-component-analysis)
+8. [Summarizing Conclusions](#whats-next)
 
 ### Motivation
 We are interested in exploring domestic health policy through the lens of county-level health rankings, mortality data, and other relevant determinants of health. Across the United States, there is broad diversity and variation in health status, access to care, and health outcomes. 
@@ -38,7 +39,7 @@ For this project, we used the following data sources (all open access!):
 ### Project Development
 We wanted to dive further into mortality and attempt to understand the factors that contribute to high mortality rates in certain counties. With this in mind, we were curious about performing [Principal Component Analysis (PCA) for mortality](https://academic.oup.com/heapol/article/21/6/459/612115). We found other literature where this method had been employed to understand [mortality in developing countries](https://www.ncbi.nlm.nih.gov/pubmed/12311007), [cardiovascular deaths among Native Americans](https://www.ncbi.nlm.nih.gov/pubmed/11839627), and [malaria cases in Ghana](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2914064/).
 
-Research Questions:
+*Research Questions*:
 1. Can we use PCA to understand the dominating factors that drive county-level mortality rates in the United States?
 2. Can applying PCA help to inform trends in mortality rates at the county level that can be used to tailor context-specific interventions?
 
