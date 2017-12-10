@@ -40,7 +40,7 @@ For this project, we used the following data sources (all open access!):
 We wanted to dive further into mortality and attempt to understand the factors that contribute to high mortality rates in certain counties. With this in mind, we were curious about performing [Principal Component Analysis (PCA) for mortality](https://academic.oup.com/heapol/article/21/6/459/612115). We found other literature where this method had been employed to understand [mortality in developing countries](https://www.ncbi.nlm.nih.gov/pubmed/12311007), [cardiovascular deaths among Native Americans](https://www.ncbi.nlm.nih.gov/pubmed/11839627), and [malaria cases in Ghana](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2914064/).
 
 *Research Questions*:
-1. Can we use PCA to understand the dominating factors that drive county-level mortality rates in the United States?
+1. Can we use PCA to understand the dominating factors that drive county-level mortality rates in the United States?  
 2. Can applying PCA help to inform trends in mortality rates at the county level that can be used to tailor context-specific interventions?
 
 ### Exploratory Analysis of Mortality Rates and Health Rankings:
@@ -75,7 +75,7 @@ We can now see that West Virginia and Mississippi had very similar trends in all
 
 *Comparing Life Expectancy Decline and County Health Rankings*  
 How did the county with the largest decrease in life expectancy (in each state) fare in terms of its county health ranking?  
--In Mississippi, Grenada County ranked 49th in 2011, and 51st in 2015 out of 55 counties in the state.
+-In Mississippi, Grenada County ranked 49th in 2011, and 51st in 2015 out of 55 counties in the state.  
 -In West Virginia, Logan Country ranked 54th in 2013 and 51st in 2015 out of 82 counties in the state. 
 
 ### Principal Component Analysis
