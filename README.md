@@ -1,9 +1,9 @@
 # Understanding Recent Declines in Life Expectancy in the United States 
----
-## Motivation
+
+## Motivation:
 We are interested in exploring domestic health policy through the lens of county-level health rankings, mortality data, and other relevant determinants of health. Across the United States, there is broad diversity and variation in health status, access to care, and health outcomes. 
 
-This repository was compiled for our final project in BST 260. We would like to thank RWFJ, IHME, and the entire BST 260 teaching team (especially Alejandro) for enabling this project's existence and completion. 
+This repository was used to support the development of our final project for BST 260. We would like to thank RWFJ, IHME, and the entire BST 260 teaching team (especially Alejandro) for enabling this project's existence and completion. 
 
 ## Data Sources:
 For this project, we used the following data sources:  
