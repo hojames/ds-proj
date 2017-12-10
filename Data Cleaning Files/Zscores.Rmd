@@ -116,5 +116,17 @@ save(RWJFMeasures_2014, file = "C:/Users/Sohini Mukherjee/OneDrive/Documents/Har
 ```
 
 
+```{r}
+alcoholdeath2014 <- read.csv("C:/Users/Sohini Mukherjee/Downloads/2014 alcoholdeaths.csv")
+alcoholdeath2014 <- select(alcoholdeath2014, c(1:2))
+```
 
+```{r}
+names(alcoholdeath2014)[names(alcoholdeath2014) == 'ï..FIPS'] <- 'FIPS'
+```
+
+```{r}
+RWJFMeasures_2015$longcommute_percent <- ave(RWJFMeasures_2015$longcommute_percent, RWJFMeasures_2015$State, FUN=scale)
+alcoholdeath2014$alcohol_drivingdeaths <- ave(alcoholdeath2014$alcohol_drivingdeaths, )
+```
 
