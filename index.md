@@ -15,6 +15,7 @@ title: Understanding Recent Life Expectancy Declines in the United States throug
 
 ### [Overview Screencast](https://vimeo.com/246722735)
 ![Alt Text](/WEBPAGE/web_image/vimeo.jpg)
+[Watch our screencast here!](https://vimeo.com/246722735)
 
 ### Motivation
 We are interested in exploring domestic health policy through the lens of county-level health rankings, mortality data, and other relevant determinants of health. Across the United States, there is broad diversity and variation in health status, access to care, and health outcomes. 
