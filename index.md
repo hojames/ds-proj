@@ -3,7 +3,7 @@ title: Understanding Recent Life Expectancy Declines in the United States throug
 ---
 
 ## Project Site Outline:
-1. Overview (embed screencast here?)
+1. [Overview](https://vimeo.com/246722735)
 2. [Motivation](#motivation)
 3. [Related Work](#related-work)
 4. [Data Sources](#sources-for-data-analysis)
@@ -12,6 +12,10 @@ title: Understanding Recent Life Expectancy Declines in the United States throug
 6. [Principal Component Analysis](#principal-component-analysis)
 7. [PCA vs. CHR](#county-health-rankings-vs-principal-component-analysis)
 8. [Summarizing Conclusions](#whats-next)
+
+### Overview Screencast
+<a href="https://vimeo.com/246722735" target="_blank"><img src="/WEBPAGE/web_image/vimeo.jpg" 
+alt="IMAGE ALT TEXT HERE" width="500" height="375" border="10" /></a>
 
 ### Motivation
 We are interested in exploring domestic health policy through the lens of county-level health rankings, mortality data, and other relevant determinants of health. Across the United States, there is broad diversity and variation in health status, access to care, and health outcomes. 
