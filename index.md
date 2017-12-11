@@ -13,11 +13,8 @@ title: Understanding Recent Life Expectancy Declines in the United States throug
 7. [PCA vs. CHR](#county-health-rankings-vs-principal-component-analysis)
 8. [Summarizing Conclusions](#whats-next)
 
-### Overview Screencast
-
-<a href="https://vimeo.com/246722735">
-  <img src="/WEBPAGE/web_image/vimeo.jpg" alt="screencast" style="width:500px;height:375px;border:10;">
-</a>
+### [Overview Screencast](https://vimeo.com/246722735)
+![Alt Text](/WEBPAGE/web_image/vimeo.jpg)
 
 ### Motivation
 We are interested in exploring domestic health policy through the lens of county-level health rankings, mortality data, and other relevant determinants of health. Across the United States, there is broad diversity and variation in health status, access to care, and health outcomes. 
@@ -182,3 +179,9 @@ Implications for our principal component analyses include focusing on the built 
 ### What's next?
 With our PCA analyses, we were able to describe new patterns of health determinants and behaviors that differed from how CHR perceives health. CHR states that their mission in creating these rankings is to provide states with information about where and how to focus their energies in improving population health. We hope that a different approach to these rankings using PCA point to other patterns in population health, and encourage a more holistic, social welfare approach to improving health. PCA tells us that what are traditionally ‘health measures’ actually describe social well being as well, which should be a focus in public health efforts.
 
+---
+*Project completed by:*  
+- Alex Earle  
+- Estelle Gong  
+- Hannah James  
+- Sohini Mukherjee  
